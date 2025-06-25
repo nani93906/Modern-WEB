@@ -21,10 +21,13 @@
       },
       user: {
         isLoggedIn: false
-      }
+      },
+      event: []
     };
   </script>
-    <script src="https://assets.adobedtm.com/21b53c73144b/f940b02f6357/launch-90013ed4d575-development.min.js" async></script>
+
+  <!-- Adobe Launch (Example script) -->
+  <script src="https://assets.adobedtm.com/21b53c73144b/f940b02f6357/launch-90013ed4d575-development.min.js" async></script>
 </head>
 
 <body>
@@ -46,7 +49,7 @@
     <div class="container">
       <h1>Welcome to Modern Web Design</h1>
       <p>Creating beautiful, responsive websites for the modern world.</p>
-      <a href="services.html" class="btn">Explore Our Services</a>
+      <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
     </div>
   </section>
 
@@ -81,5 +84,27 @@
       </div>
     </div>
   </footer>
+
+  <!-- ✅ Click Event Tracking Script -->
+  <script>
+    document.getElementById("exploreServicesBtn").addEventListener("click", function () {
+      if (!window.digitalData.event) {
+        window.digitalData.event = [];
+      }
+      window.digitalData.event.push({
+        event: "buttonClick",
+        button: {
+          buttonID: "exploreServicesBtn",
+          buttonText: "Explore Our Services",
+          destinationURL: this.href
+        },
+        page: {
+          pageName: digitalData.page.pageInfo.pageName
+        },
+        timestamp: new Date().toISOString()
+      });
+      console.log("digitalData event pushed:", digitalData.event[digitalData.event.length - 1]);
+    });
+  </script>
 </body>
 </html>
