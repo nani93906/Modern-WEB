@@ -1,81 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | Modern Web Design</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Modern Web Design</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <!-- ✅ digitalData Initialization -->
+  <script>
+    window.digitalData = {
+      page: {
+        pageInfo: {
+          pageName: "About",
+          siteSection: "About Us",
+          language: document.documentElement.lang || "en",
+          pageURL: window.location.href,
+          pageTitle: document.title
+        }
+      },
+      user: {
+        isLoggedIn: false
+      }
+    };
+  </script>
+    <script src="https://assets.adobedtm.com/21b53c73144b/f940b02f6357/launch-90013ed4d575-development.min.js" async></script>
 </head>
+
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">ModernWeb</div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html" class="active">About</a></li>
-                    <li><a href="services.html">Services</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <div class="container">
+      <div class="logo">ModernWeb</div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html" class="active">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <section class="page-header">
-        <div class="container">
-            <h1>About Our Company</h1>
-            <p>Learn more about who we are and what we stand for</p>
-        </div>
-    </section>
+  <section class="page-header">
+    <div class="container">
+      <h1>About Our Company</h1>
+      <p>Learn more about who we are and what we stand for</p>
+    </div>
+  </section>
 
-    <section class="about-content">
-        <div class="container">
-            <div class="about-text">
-                <h2>Our Story</h2>
-                <p>Founded in 2015, Modern Web Design started as a small team of passionate developers and designers with a vision to create beautiful, functional websites that make a difference.</p>
-                <p>Over the years, we've grown into a full-service digital agency, but we've never lost our commitment to quality and personal service.</p>
-                <a href="services.html" class="btn">Our Services</a>
-            </div>
-            <div class="about-image">
-                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Our Team">
-            </div>
-        </div>
-    </section>
+  <section class="about-content">
+    <div class="container">
+      <div class="about-text">
+        <h2>Our Story</h2>
+        <p>Founded in 2015, Modern Web Design started as a small team of passionate developers and designers with a vision to create beautiful, functional websites that make a difference.</p>
+        <p>Over the years, we've grown into a full-service digital agency, but we've never lost our commitment to quality and personal service.</p>
+        <a href="services.html" class="btn">Our Services</a>
+      </div>
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c" alt="Our Team" />
+      </div>
+    </div>
+  </section>
 
-    <section class="team">
-        <div class="container">
-            <h2>Meet Our Team</h2>
-            <div class="team-members">
-                <div class="member">
-                    <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Team Member">
-                    <h3>Sarah Johnson</h3>
-                    <p>Lead Designer</p>
-                </div>
-                <div class="member">
-                    <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Team Member">
-                    <h3>Michael Chen</h3>
-                    <p>Senior Developer</p>
-                </div>
-                <div class="member">
-                    <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Team Member">
-                    <h3>Emily Rodriguez</h3>
-                    <p>Project Manager</p>
-                </div>
-            </div>
+  <section class="team">
+    <div class="container">
+      <h2>Meet Our Team</h2>
+      <div class="team-members">
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Team Member" />
+          <h3>Sarah Johnson</h3>
+          <p>Lead Designer</p>
         </div>
-    </section>
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/men/44.jpg" alt="Team Member" />
+          <h3>Michael Chen</h3>
+          <p>Senior Developer</p>
+        </div>
+        <div class="member">
+          <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Team Member" />
+          <h3>Emily Rodriguez</h3>
+          <p>Project Manager</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 Modern Web Design. All rights reserved.</p>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
-            </div>
-        </div>
-    </footer>
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Modern Web Design. All rights reserved.</p>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
