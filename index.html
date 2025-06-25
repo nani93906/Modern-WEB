@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <!-- ✅ digitalData Initialization -->
+  <!-- ✅ digitalData Initialization for Adobe Analytics -->
   <script>
     window.digitalData = {
       page: {
@@ -22,12 +22,9 @@
       user: {
         isLoggedIn: false
       },
-      event: []
+      event: [] // click events will be pushed here
     };
   </script>
-
-  <!-- Adobe Launch (Example script) -->
-  <script src="https://assets.adobedtm.com/21b53c73144b/f940b02f6357/launch-90013ed4d575-development.min.js" async></script>
 </head>
 
 <body>
@@ -85,25 +82,23 @@
     </div>
   </footer>
 
-  <!-- ✅ Click Event Tracking Script -->
+  <!-- ✅ Click Call Script for Adobe Analytics -->
   <script>
     document.getElementById("exploreServicesBtn").addEventListener("click", function () {
-      if (!window.digitalData.event) {
-        window.digitalData.event = [];
-      }
       window.digitalData.event.push({
         event: "buttonClick",
-        button: {
+        eventInfo: {
           buttonID: "exploreServicesBtn",
           buttonText: "Explore Our Services",
-          destinationURL: this.href
+          destinationURL: this.href,
+          interactionType: "click",
+          timestamp: new Date().toISOString()
         },
         page: {
           pageName: digitalData.page.pageInfo.pageName
-        },
-        timestamp: new Date().toISOString()
+        }
       });
-      console.log("digitalData event pushed:", digitalData.event[digitalData.event.length - 1]);
+      console.log("✅ digitalData click event pushed:", digitalData.event[digitalData.event.length - 1]);
     });
   </script>
 </body>
