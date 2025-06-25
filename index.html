@@ -83,23 +83,36 @@
   </footer>
 
   <!-- ✅ Click Call Script for Adobe Analytics -->
-  <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function () {
-      window.digitalData.event.push({
-        event: "buttonClick",
-        eventInfo: {
-          buttonID: "exploreServicesBtn",
-          buttonText: "Explore Our Services",
-          destinationURL: this.href,
-          interactionType: "click",
-          timestamp: new Date().toISOString()
-        },
-        page: {
-          pageName: digitalData.page.pageInfo.pageName
-        }
-      });
-      console.log("✅ digitalData click event pushed:", digitalData.event[digitalData.event.length - 1]);
+  <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
+
+<script>
+  document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
+    e.preventDefault(); // Stop immediate navigation
+
+    const destination = this.href;
+
+    window.digitalData.event.push({
+      event: "buttonClick",
+      eventInfo: {
+        buttonID: "exploreServicesBtn",
+        buttonText: "Explore Our Services",
+        destinationURL: destination,
+        interactionType: "click",
+        timestamp: new Date().toISOString()
+      },
+      page: {
+        pageName: digitalData.page.pageInfo.pageName
+      }
     });
-  </script>
+
+    console.log("✅ digitalData click event pushed");
+
+    // Wait 300ms, then navigate
+    setTimeout(() => {
+      window.location.href = destination;
+    }, 3000000);
+  });
+</script>
+
 </body>
 </html>
