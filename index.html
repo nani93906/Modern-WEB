@@ -20,7 +20,12 @@
         }
       },
       user: {
-        isLoggedIn: false
+        isLoggedIn: false,
+        firstName: "Durga",
+        middleName: "prasad",
+        lastName: "Maddipatla",
+        age: 30,
+        gender: "male"
       },
       event: [] // click events will be pushed here
     };
@@ -83,36 +88,34 @@
   </footer>
 
   <!-- ✅ Click Call Script for Adobe Analytics -->
-  <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
+  <script>
+    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
+      e.preventDefault(); // Stop immediate navigation
 
-<script>
-  document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-    e.preventDefault(); // Stop immediate navigation
+      const destination = this.href;
 
-    const destination = this.href;
+      window.digitalData.event.push({
+        event: "buttonClick",
+        eventInfo: {
+          buttonID: "exploreServicesBtn",
+          buttonText: "Explore Our Services",
+          destinationURL: destination,
+          interactionType: "click",
+          timestamp: new Date().toISOString()
+        },
+        page: {
+          pageName: digitalData.page.pageInfo.pageName
+        }
+      });
 
-    window.digitalData.event.push({
-      event: "buttonClick",
-      eventInfo: {
-        buttonID: "exploreServicesBtn",
-        buttonText: "Explore Our Services",
-        destinationURL: destination,
-        interactionType: "click",
-        timestamp: new Date().toISOString()
-      },
-      page: {
-        pageName: digitalData.page.pageInfo.pageName
-      }
+      console.log("✅ digitalData click event pushed");
+
+      // Wait 300ms, then navigate
+      setTimeout(() => {
+        window.location.href = destination;
+      }, 300);
     });
-
-    console.log("✅ digitalData click event pushed");
-
-    // Wait 300ms, then navigate
-    setTimeout(() => {
-      window.location.href = destination;
-    }, 3000000);
-  });
-</script>
+  </script>
 
 </body>
 </html>
