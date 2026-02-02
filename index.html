@@ -2,19 +2,23 @@
 <html lang="en">
 <head>
   <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-T8C6RVQM');</script>
-<!-- End Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8C6RVQM');
+  </script>
+  <!-- End Google Tag Manager -->
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Modern Web Design | Home</title>
+
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <!-- ✅ digitalData Initialization for Adobe Analytics -->
+  <!-- ✅ digitalData Initialization (Adobe Analytics) -->
   <script>
     window.digitalData = {
       page: {
@@ -34,12 +38,32 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         age: 22,
         gender: "male"
       },
-      event: [] // click events will be pushed here
+      event: []
     };
+  </script>
+
+  <!-- ✅ GTM Page View DataLayer -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "page_view",
+      page_name: digitalData.page.pageInfo.pageName,
+      page_url: digitalData.page.pageInfo.pageURL,
+      page_title: digitalData.page.pageInfo.pageTitle,
+      site_section: digitalData.page.pageInfo.siteSection,
+      language: digitalData.page.pageInfo.language
+    });
   </script>
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End GTM (noscript) -->
+
   <header>
     <div class="container">
       <div class="logo">ModernWeb</div>
@@ -94,10 +118,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
   </footer>
 
-  <!-- ✅ Click Call Script for Adobe Analytics -->
+  <!-- ✅ Adobe Analytics Click Event -->
   <script>
     document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-      e.preventDefault(); // Stop immediate navigation
+      e.preventDefault();
 
       const destination = this.href;
 
@@ -117,25 +141,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       console.log("✅ digitalData click event pushed");
 
-      // Wait 300ms, then navigate
       setTimeout(() => {
         window.location.href = destination;
       }, 300);
     });
   </script>
-<script>
-  document.getElementById("exploreServicesBtn").addEventListener("click", function () {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "explore_services_click",
-      button_text: "Explore Our Services",
-      button_id: "exploreServicesBtn",
-      page_name: digitalData.page.pageInfo.pageName,
-      page_url: window.location.href
+
+  <!-- ✅ GTM Click DataLayer -->
+  <script>
+    document.getElementById("exploreServicesBtn").addEventListener("click", function () {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "explore_services_click",
+        button_text: "Explore Our Services",
+        button_id: "exploreServicesBtn",
+        page_name: digitalData.page.pageInfo.pageName,
+        page_url: window.location.href
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
 </html>
-
