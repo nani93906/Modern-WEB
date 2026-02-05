@@ -83,7 +83,6 @@
 
 <body>
 
-  <!-- GTM noscript -->
   <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -130,7 +129,7 @@
     </div>
   </div>
 
-  <!-- Explore Services Click -->
+  <!-- CTA CLICK -->
   <script>
     document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
       e.preventDefault();
@@ -160,6 +159,12 @@
       signInBtn.style.display = "none";
       signOutBtn.style.display = "inline";
       digitalData.user.isLoggedIn = true;
+
+      window.dataLayer.push({
+        event: "user_session_active",
+        userId: "U12345",
+        userType: "registered"
+      });
     }
 
     /* LOGIN INITIATED */
@@ -168,7 +173,6 @@
 
       window.dataLayer.push({
         event: "login_initiated",
-        login_step: "open_login_modal",
         page_name: "Home",
         page_url: window.location.href
       });
@@ -182,13 +186,14 @@
       const password = document.getElementById("password").value;
 
       if (email === "user@test.com" && password === "123456") {
-        localStorage.setItem("user", JSON.stringify({ loggedIn: true }));
+        localStorage.setItem("user", JSON.stringify({ userId: "U12345", userType: "registered" }));
         digitalData.user.isLoggedIn = true;
 
         window.dataLayer.push({
           event: "login_success",
           login_method: "email",
-          user_status: "logged_in",
+          userId: "U12345",
+          userType: "registered",
           page_name: "Home",
           page_url: window.location.href
         });
@@ -201,6 +206,8 @@
 
         window.dataLayer.push({
           event: "login_failed",
+          userId: null,
+          userType: "guest",
           failure_reason: "invalid_credentials",
           page_name: "Home",
           page_url: window.location.href
@@ -217,7 +224,8 @@
 
       window.dataLayer.push({
         event: "logout",
-        user_status: "logged_out",
+        userId: "U12345",
+        userType: "registered",
         page_name: "Home",
         page_url: window.location.href
       });
