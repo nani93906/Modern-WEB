@@ -36,16 +36,15 @@
     };
   </script>
 
-  <!-- GTM Page View -->
+  <!-- PAGE VIEW -->
   <script>
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "page_view",
-      page_name: digitalData.page.pageInfo.pageName,
-      page_url: digitalData.page.pageInfo.pageURL,
-      page_title: digitalData.page.pageInfo.pageTitle,
-      site_section: digitalData.page.pageInfo.siteSection,
-      language: digitalData.page.pageInfo.language
+      page_name: "Home",
+      page_url: window.location.href,
+      page_title: document.title,
+      site_section: "Homepage"
     });
   </script>
 
@@ -83,6 +82,8 @@
 </head>
 
 <body>
+
+  <!-- GTM noscript -->
   <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -129,7 +130,29 @@
     </div>
   </div>
 
-  <!-- LOGIN + GTM EVENTS -->
+  <!-- Explore Services Click -->
+  <script>
+    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
+      e.preventDefault();
+
+      window.dataLayer.push({
+        event: "select_content",
+        event_category: "navigation",
+        event_action: "click",
+        event_label: "explore_services",
+        element_text: "Explore Our Services",
+        element_type: "button",
+        page_name: "Home",
+        page_url: window.location.href
+      });
+
+      setTimeout(() => {
+        window.location.href = this.href;
+      }, 300);
+    });
+  </script>
+
+  <!-- SIGN IN / SIGN OUT FLOW -->
   <script>
     const signInBtn = document.getElementById("signInBtn");
     const signOutBtn = document.getElementById("signOutBtn");
@@ -137,82 +160,80 @@
 
     const user = JSON.parse(localStorage.getItem("user"));
 
-    // ---------- PAGE LOAD LOGIN STATE ----------
     if (user) {
       signInBtn.style.display = "none";
       signOutBtn.style.display = "inline";
       digitalData.user.isLoggedIn = true;
-
-      window.dataLayer.push({
-        event: "login_state_loaded",
-        user_status: "logged_in"
-      });
     }
 
-    // ---------- SIGN IN CLICK ----------
     signInBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
       window.dataLayer.push({
-        event: "signin_click",
-        page_name: digitalData.page.pageInfo.pageName
+        event: "select_content",
+        event_category: "authentication",
+        event_action: "click",
+        event_label: "sign_in",
+        element_text: "Sign In",
+        element_type: "link",
+        page_name: "Home",
+        page_url: window.location.href
       });
 
       loginModal.style.display = "flex";
 
       window.dataLayer.push({
-        event: "login_modal_view"
+        event: "screen_view",
+        screen_name: "login_modal",
+        screen_type: "modal",
+        page_name: "Home",
+        page_url: window.location.href
       });
     });
 
-    // ---------- LOGIN SUBMIT ----------
     document.getElementById("loginSubmit").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       if (email === "user@test.com" && password === "123456") {
+        localStorage.setItem("user", JSON.stringify({ loggedIn: true }));
 
-        const userData = { email, firstName: "Durga" };
-        localStorage.setItem("user", JSON.stringify(userData));
-
-        digitalData.user = { isLoggedIn: true, email };
-        digitalData.event.push({ event: "userLogin" });
+        digitalData.user.isLoggedIn = true;
 
         window.dataLayer.push({
-          event: "login_success",
-          login_method: "email",
-          user_email: email
+          event: "login",
+          method: "email",
+          user_status: "logged_in",
+          page_name: "Home",
+          page_url: window.location.href
         });
 
         loginModal.style.display = "none";
         signInBtn.style.display = "none";
         signOutBtn.style.display = "inline";
-
       } else {
         document.getElementById("loginError").style.display = "block";
 
         window.dataLayer.push({
-          event: "login_failure",
-          reason: "invalid_credentials"
+          event: "login_error",
+          error_type: "invalid_credentials",
+          page_name: "Home",
+          page_url: window.location.href
         });
       }
     });
 
-    // ---------- SIGN OUT ----------
     signOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      window.dataLayer.push({
-        event: "signout_click"
-      });
-
       localStorage.removeItem("user");
-
       digitalData.user.isLoggedIn = false;
-      digitalData.event.push({ event: "userLogout" });
 
       window.dataLayer.push({
-        event: "logout"
+        event: "logout",
+        user_status: "logged_out",
+        page_name: "Home",
+        page_url: window.location.href
       });
 
       signInBtn.style.display = "inline";
