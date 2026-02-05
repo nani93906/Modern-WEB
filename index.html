@@ -49,7 +49,6 @@
     });
   </script>
 
-  <!-- ✅ LOGIN MODAL STYLES (ONLY ADDITION) -->
   <style>
     .login-modal {
       display:none;
@@ -84,7 +83,6 @@
 </head>
 
 <body>
-  <!-- GTM (noscript) -->
   <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
@@ -114,33 +112,13 @@
     </div>
   </section>
 
-  <section class="features">
-    <div class="container">
-      <div class="feature-box">
-        <i class="fas fa-mobile-alt"></i>
-        <h3>Responsive Design</h3>
-        <p>Our websites look great on any device.</p>
-      </div>
-      <div class="feature-box">
-        <i class="fas fa-bolt"></i>
-        <h3>Fast Performance</h3>
-        <p>Optimized for speed and performance.</p>
-      </div>
-      <div class="feature-box">
-        <i class="fas fa-paint-brush"></i>
-        <h3>Modern Design</h3>
-        <p>Clean, contemporary designs.</p>
-      </div>
-    </div>
-  </section>
-
   <footer>
     <div class="container">
       <p>&copy; 2023 Modern Web Design</p>
     </div>
   </footer>
 
-  <!-- ✅ LOGIN MODAL (ONLY ADDITION) -->
+  <!-- LOGIN MODAL -->
   <div class="login-modal" id="loginModal">
     <div class="login-box">
       <h3>Sign In</h3>
@@ -151,37 +129,7 @@
     </div>
   </div>
 
-  <!-- Explore Services Click (UNCHANGED) -->
-  <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-      e.preventDefault();
-      const destination = this.href;
-
-      digitalData.event.push({
-        event: "buttonClick",
-        eventInfo: {
-          buttonID: "exploreServicesBtn",
-          buttonText: "Explore Our Services",
-          destinationURL: destination,
-          interactionType: "click",
-          timestamp: new Date().toISOString()
-        }
-      });
-
-      window.dataLayer.push({
-        event: "explore_services_click",
-        button_text: "Explore Our Services",
-        button_id: "exploreServicesBtn",
-        page_name: digitalData.page.pageInfo.pageName
-      });
-
-      setTimeout(() => {
-        window.location.href = destination;
-      }, 300);
-    });
-  </script>
-
-  <!-- ✅ REAL SIGN-IN / SIGN-OUT FLOW -->
+  <!-- LOGIN + GTM EVENTS -->
   <script>
     const signInBtn = document.getElementById("signInBtn");
     const signOutBtn = document.getElementById("signOutBtn");
@@ -189,22 +137,41 @@
 
     const user = JSON.parse(localStorage.getItem("user"));
 
+    // ---------- PAGE LOAD LOGIN STATE ----------
     if (user) {
       signInBtn.style.display = "none";
       signOutBtn.style.display = "inline";
       digitalData.user.isLoggedIn = true;
+
+      window.dataLayer.push({
+        event: "login_state_loaded",
+        user_status: "logged_in"
+      });
     }
 
+    // ---------- SIGN IN CLICK ----------
     signInBtn.addEventListener("click", (e) => {
       e.preventDefault();
+
+      window.dataLayer.push({
+        event: "signin_click",
+        page_name: digitalData.page.pageInfo.pageName
+      });
+
       loginModal.style.display = "flex";
+
+      window.dataLayer.push({
+        event: "login_modal_view"
+      });
     });
 
+    // ---------- LOGIN SUBMIT ----------
     document.getElementById("loginSubmit").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       if (email === "user@test.com" && password === "123456") {
+
         const userData = { email, firstName: "Durga" };
         localStorage.setItem("user", JSON.stringify(userData));
 
@@ -212,7 +179,7 @@
         digitalData.event.push({ event: "userLogin" });
 
         window.dataLayer.push({
-          event: "login",
+          event: "login_success",
           login_method: "email",
           user_email: email
         });
@@ -220,20 +187,33 @@
         loginModal.style.display = "none";
         signInBtn.style.display = "none";
         signOutBtn.style.display = "inline";
+
       } else {
         document.getElementById("loginError").style.display = "block";
+
+        window.dataLayer.push({
+          event: "login_failure",
+          reason: "invalid_credentials"
+        });
       }
     });
 
+    // ---------- SIGN OUT ----------
     signOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
+
+      window.dataLayer.push({
+        event: "signout_click"
+      });
 
       localStorage.removeItem("user");
 
       digitalData.user.isLoggedIn = false;
       digitalData.event.push({ event: "userLogout" });
 
-      window.dataLayer.push({ event: "logout" });
+      window.dataLayer.push({
+        event: "logout"
+      });
 
       signInBtn.style.display = "inline";
       signOutBtn.style.display = "none";
