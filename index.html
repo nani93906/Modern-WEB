@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <!-- ✅ digitalData Initialization (Adobe Analytics) -->
+  <!-- Adobe digitalData -->
   <script>
     window.digitalData = {
       page: {
@@ -31,18 +31,13 @@
         }
       },
       user: {
-        isLoggedIn: false,
-        firstName: "Durga",
-        middleName: "prasad",
-        lastName: "Maddipatla",
-        age: 22,
-        gender: "male"
+        isLoggedIn: false
       },
       event: []
     };
   </script>
 
-  <!-- ✅ GTM Page View DataLayer -->
+  <!-- GTM Page View -->
   <script>
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
@@ -57,12 +52,12 @@
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) -->
+  <!-- GTM (noscript) -->
   <noscript>
     <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
   </noscript>
-  <!-- End GTM (noscript) -->
+  <!-- End GTM -->
 
   <header>
     <div class="container">
@@ -73,6 +68,8 @@
           <li><a href="about.html">About</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="signInBtn">Sign In</a></li>
+          <li><a href="#" id="signOutBtn" style="display:none;">Sign Out</a></li>
         </ul>
       </nav>
     </div>
@@ -91,41 +88,34 @@
       <div class="feature-box">
         <i class="fas fa-mobile-alt"></i>
         <h3>Responsive Design</h3>
-        <p>Our websites look great on any device, from desktop to mobile.</p>
+        <p>Our websites look great on any device.</p>
       </div>
       <div class="feature-box">
         <i class="fas fa-bolt"></i>
         <h3>Fast Performance</h3>
-        <p>Optimized for speed and performance to keep your visitors engaged.</p>
+        <p>Optimized for speed and performance.</p>
       </div>
       <div class="feature-box">
         <i class="fas fa-paint-brush"></i>
         <h3>Modern Design</h3>
-        <p>Clean, contemporary designs that make an impact.</p>
+        <p>Clean, contemporary designs.</p>
       </div>
     </div>
   </section>
 
   <footer>
     <div class="container">
-      <p>&copy; 2023 Modern Web Design. All rights reserved.</p>
-      <div class="social-icons">
-        <a href="#"><i class="fab fa-facebook"></i></a>
-        <a href="#"><i class="fab fa-twitter"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-linkedin"></i></a>
-      </div>
+      <p>&copy; 2023 Modern Web Design</p>
     </div>
   </footer>
 
-  <!-- ✅ Adobe Analytics Click Event -->
+  <!-- Explore Services Click -->
   <script>
     document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
       e.preventDefault();
-
       const destination = this.href;
 
-      window.digitalData.event.push({
+      digitalData.event.push({
         event: "buttonClick",
         eventInfo: {
           buttonID: "exploreServicesBtn",
@@ -133,13 +123,15 @@
           destinationURL: destination,
           interactionType: "click",
           timestamp: new Date().toISOString()
-        },
-        page: {
-          pageName: digitalData.page.pageInfo.pageName
         }
       });
 
-      console.log("✅ digitalData click event pushed");
+      window.dataLayer.push({
+        event: "explore_services_click",
+        button_text: "Explore Our Services",
+        button_id: "exploreServicesBtn",
+        page_name: digitalData.page.pageInfo.pageName
+      });
 
       setTimeout(() => {
         window.location.href = destination;
@@ -147,17 +139,73 @@
     });
   </script>
 
-  <!-- ✅ GTM Click DataLayer -->
+  <!-- Sign In / Sign Out -->
   <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function () {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: "explore_services_click",
-        button_text: "Explore Our Services",
-        button_id: "exploreServicesBtn",
-        page_name: digitalData.page.pageInfo.pageName,
-        page_url: window.location.href
+    const signInBtn = document.getElementById("signInBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+    if (loggedIn) {
+      signInBtn.style.display = "none";
+      signOutBtn.style.display = "inline";
+      digitalData.user.isLoggedIn = true;
+    }
+
+    signInBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      localStorage.setItem("isLoggedIn", "true");
+
+      digitalData.user = {
+        isLoggedIn: true,
+        firstName: "Durga",
+        middleName: "Prasad",
+        lastName: "Maddipatla",
+        age: 22,
+        gender: "male"
+      };
+
+      digitalData.event.push({
+        event: "userLogin",
+        eventInfo: {
+          loginMethod: "email",
+          timestamp: new Date().toISOString()
+        }
       });
+
+      window.dataLayer.push({
+        event: "login",
+        login_method: "email",
+        user_status: "logged_in",
+        user_name: "Durga Maddipatla"
+      });
+
+      signInBtn.style.display = "none";
+      signOutBtn.style.display = "inline";
+    });
+
+    signOutBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      localStorage.removeItem("isLoggedIn");
+
+      digitalData.user.isLoggedIn = false;
+
+      digitalData.event.push({
+        event: "userLogout",
+        eventInfo: {
+          timestamp: new Date().toISOString()
+        }
+      });
+
+      window.dataLayer.push({
+        event: "logout",
+        user_status: "logged_out"
+      });
+
+      signInBtn.style.display = "inline";
+      signOutBtn.style.display = "none";
     });
   </script>
 
