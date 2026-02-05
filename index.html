@@ -36,11 +36,11 @@
     };
   </script>
 
-  <!-- PAGE VIEW -->
+  <!-- PAGE LOAD -->
   <script>
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-      event: "page_view",
+      event: "page_load",
       page_name: "Home",
       page_url: window.location.href,
       page_title: document.title,
@@ -136,12 +136,8 @@
       e.preventDefault();
 
       window.dataLayer.push({
-        event: "select_content",
-        event_category: "navigation",
-        event_action: "click",
-        event_label: "explore_services",
-        element_text: "Explore Our Services",
-        element_type: "button",
+        event: "cta_click",
+        cta_name: "explore_services",
         page_name: "Home",
         page_url: window.location.href
       });
@@ -152,7 +148,7 @@
     });
   </script>
 
-  <!-- SIGN IN / SIGN OUT FLOW -->
+  <!-- AUTH FLOW -->
   <script>
     const signInBtn = document.getElementById("signInBtn");
     const signOutBtn = document.getElementById("signOutBtn");
@@ -166,43 +162,32 @@
       digitalData.user.isLoggedIn = true;
     }
 
+    /* LOGIN INITIATED */
     signInBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
       window.dataLayer.push({
-        event: "select_content",
-        event_category: "authentication",
-        event_action: "click",
-        event_label: "sign_in",
-        element_text: "Sign In",
-        element_type: "link",
+        event: "login_initiated",
+        login_step: "open_login_modal",
         page_name: "Home",
         page_url: window.location.href
       });
 
       loginModal.style.display = "flex";
-
-      window.dataLayer.push({
-        event: "screen_view",
-        screen_name: "login_modal",
-        screen_type: "modal",
-        page_name: "Home",
-        page_url: window.location.href
-      });
     });
 
+    /* LOGIN SUBMIT */
     document.getElementById("loginSubmit").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
 
       if (email === "user@test.com" && password === "123456") {
         localStorage.setItem("user", JSON.stringify({ loggedIn: true }));
-
         digitalData.user.isLoggedIn = true;
 
         window.dataLayer.push({
-          event: "login",
-          method: "email",
+          event: "login_success",
+          login_method: "email",
           user_status: "logged_in",
           page_name: "Home",
           page_url: window.location.href
@@ -215,14 +200,15 @@
         document.getElementById("loginError").style.display = "block";
 
         window.dataLayer.push({
-          event: "login_error",
-          error_type: "invalid_credentials",
+          event: "login_failed",
+          failure_reason: "invalid_credentials",
           page_name: "Home",
           page_url: window.location.href
         });
       }
     });
 
+    /* LOGOUT */
     signOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
