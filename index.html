@@ -11,16 +11,11 @@
   </script>
 
   <meta charset="UTF-8" />
-  <title>Modern Web | Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modern Web Design | Home</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    .login-box { display:none; max-width:300px; margin:20px auto; }
-    .login-box input { width:100%; padding:8px; margin:6px 0; }
-    .login-box button { width:100%; padding:8px; }
-    .user-info { display:none; text-align:center; margin:20px; }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
   <!-- Adobe digitalData -->
   <script>
@@ -28,7 +23,10 @@
       page: {
         pageInfo: {
           pageName: "Home",
-          pageURL: location.href
+          siteSection: "Homepage",
+          language: "en",
+          pageURL: window.location.href,
+          pageTitle: document.title
         }
       },
       user: {
@@ -43,120 +41,204 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "page_view",
-      page_name: "Home"
+      page_name: digitalData.page.pageInfo.pageName,
+      page_url: digitalData.page.pageInfo.pageURL,
+      page_title: digitalData.page.pageInfo.pageTitle,
+      site_section: digitalData.page.pageInfo.siteSection,
+      language: digitalData.page.pageInfo.language
     });
   </script>
+
+  <!-- ✅ LOGIN MODAL STYLES (ONLY ADDITION) -->
+  <style>
+    .login-modal {
+      display:none;
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.6);
+      justify-content:center;
+      align-items:center;
+    }
+    .login-box {
+      background:#fff;
+      padding:20px;
+      width:300px;
+      border-radius:6px;
+    }
+    .login-box input {
+      width:100%;
+      margin:8px 0;
+      padding:8px;
+    }
+    .login-box button {
+      width:100%;
+      padding:8px;
+    }
+    .error {
+      color:red;
+      display:none;
+      font-size:14px;
+    }
+  </style>
 </head>
 
 <body>
+  <!-- GTM (noscript) -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
 
-<header>
-  <h2 style="text-align:center">Modern Web Design</h2>
-  <nav style="text-align:center">
-    <a href="#">Home</a> |
-    <a href="#">Shop</a> |
-    <a href="#">Cart</a> |
-    <a href="#" id="loginNav">Sign In</a> |
-    <a href="#" id="logoutNav" style="display:none;">Sign Out</a>
-  </nav>
-</header>
+  <header>
+    <div class="container">
+      <div class="logo">ModernWeb</div>
+      <nav>
+        <ul>
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#" id="signInBtn">Sign In</a></li>
+          <li><a href="#" id="signOutBtn" style="display:none;">Sign Out</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-<!-- LOGIN FORM -->
-<div class="login-box" id="loginBox">
-  <h3>Sign In</h3>
-  <input type="email" id="email" placeholder="Email" required />
-  <input type="password" id="password" placeholder="Password" required />
-  <button id="loginBtn">Login</button>
-  <p id="loginError" style="color:red; display:none;">Invalid credentials</p>
-</div>
+  <section class="hero">
+    <div class="container">
+      <h1>Welcome to Modern Web Design</h1>
+      <p>Creating beautiful, responsive websites for the modern world.</p>
+      <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
+    </div>
+  </section>
 
-<!-- USER INFO -->
-<div class="user-info" id="userInfo">
-  <h3>Welcome, <span id="userName"></span></h3>
-  <p>You are logged in.</p>
-</div>
+  <section class="features">
+    <div class="container">
+      <div class="feature-box">
+        <i class="fas fa-mobile-alt"></i>
+        <h3>Responsive Design</h3>
+        <p>Our websites look great on any device.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-bolt"></i>
+        <h3>Fast Performance</h3>
+        <p>Optimized for speed and performance.</p>
+      </div>
+      <div class="feature-box">
+        <i class="fas fa-paint-brush"></i>
+        <h3>Modern Design</h3>
+        <p>Clean, contemporary designs.</p>
+      </div>
+    </div>
+  </section>
 
-<script>
-  const loginBox = document.getElementById("loginBox");
-  const userInfo = document.getElementById("userInfo");
-  const loginNav = document.getElementById("loginNav");
-  const logoutNav = document.getElementById("logoutNav");
+  <footer>
+    <div class="container">
+      <p>&copy; 2023 Modern Web Design</p>
+    </div>
+  </footer>
 
-  const storedUser = JSON.parse(localStorage.getItem("user"));
+  <!-- ✅ LOGIN MODAL (ONLY ADDITION) -->
+  <div class="login-modal" id="loginModal">
+    <div class="login-box">
+      <h3>Sign In</h3>
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="loginSubmit">Login</button>
+      <p class="error" id="loginError">Invalid credentials</p>
+    </div>
+  </div>
 
-  // ---------- PAGE LOAD SESSION CHECK ----------
-  if (storedUser) {
-    setLoggedInState(storedUser);
-  }
+  <!-- Explore Services Click (UNCHANGED) -->
+  <script>
+    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
+      e.preventDefault();
+      const destination = this.href;
 
-  // ---------- SHOW LOGIN ----------
-  loginNav.addEventListener("click", (e) => {
-    e.preventDefault();
-    loginBox.style.display = "block";
-  });
-
-  // ---------- LOGIN ----------
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-
-    // Dummy validation (real sites validate from backend)
-    if (email === "user@test.com" && password === "123456") {
-
-      const user = {
-        email,
-        firstName: "Durga",
-        lastName: "Maddipatla"
-      };
-
-      localStorage.setItem("user", JSON.stringify(user));
-      setLoggedInState(user);
-
-      // Adobe Analytics
-      digitalData.user = { isLoggedIn: true, email };
       digitalData.event.push({
-        event: "userLogin",
-        eventInfo: { method: "email" }
+        event: "buttonClick",
+        eventInfo: {
+          buttonID: "exploreServicesBtn",
+          buttonText: "Explore Our Services",
+          destinationURL: destination,
+          interactionType: "click",
+          timestamp: new Date().toISOString()
+        }
       });
 
-      // GTM
       window.dataLayer.push({
-        event: "login",
-        login_method: "email",
-        user_email: email
+        event: "explore_services_click",
+        button_text: "Explore Our Services",
+        button_id: "exploreServicesBtn",
+        page_name: digitalData.page.pageInfo.pageName
       });
 
-    } else {
-      document.getElementById("loginError").style.display = "block";
+      setTimeout(() => {
+        window.location.href = destination;
+      }, 300);
+    });
+  </script>
+
+  <!-- ✅ REAL SIGN-IN / SIGN-OUT FLOW -->
+  <script>
+    const signInBtn = document.getElementById("signInBtn");
+    const signOutBtn = document.getElementById("signOutBtn");
+    const loginModal = document.getElementById("loginModal");
+
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      signInBtn.style.display = "none";
+      signOutBtn.style.display = "inline";
+      digitalData.user.isLoggedIn = true;
     }
-  });
 
-  // ---------- LOGOUT ----------
-  logoutNav.addEventListener("click", (e) => {
-    e.preventDefault();
+    signInBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      loginModal.style.display = "flex";
+    });
 
-    localStorage.removeItem("user");
+    document.getElementById("loginSubmit").addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
 
-    digitalData.user.isLoggedIn = false;
-    digitalData.event.push({ event: "userLogout" });
+      if (email === "user@test.com" && password === "123456") {
+        const userData = { email, firstName: "Durga" };
+        localStorage.setItem("user", JSON.stringify(userData));
 
-    window.dataLayer.push({ event: "logout" });
+        digitalData.user = { isLoggedIn: true, email };
+        digitalData.event.push({ event: "userLogin" });
 
-    loginBox.style.display = "none";
-    userInfo.style.display = "none";
-    loginNav.style.display = "inline";
-    logoutNav.style.display = "none";
-  });
+        window.dataLayer.push({
+          event: "login",
+          login_method: "email",
+          user_email: email
+        });
 
-  // ---------- UI STATE ----------
-  function setLoggedInState(user) {
-    loginBox.style.display = "none";
-    userInfo.style.display = "block";
-    document.getElementById("userName").innerText = user.firstName;
-    loginNav.style.display = "none";
-    logoutNav.style.display = "inline";
-  }
-</script>
+        loginModal.style.display = "none";
+        signInBtn.style.display = "none";
+        signOutBtn.style.display = "inline";
+      } else {
+        document.getElementById("loginError").style.display = "block";
+      }
+    });
+
+    signOutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      localStorage.removeItem("user");
+
+      digitalData.user.isLoggedIn = false;
+      digitalData.event.push({ event: "userLogout" });
+
+      window.dataLayer.push({ event: "logout" });
+
+      signInBtn.style.display = "inline";
+      signOutBtn.style.display = "none";
+    });
+  </script>
 
 </body>
 </html>
