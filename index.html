@@ -9,14 +9,18 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-T8C6RVQM');
   </script>
-  <!-- End Google Tag Manager -->
 
   <meta charset="UTF-8" />
+  <title>Modern Web | Home</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modern Web Design | Home</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .login-box { display:none; max-width:300px; margin:20px auto; }
+    .login-box input { width:100%; padding:8px; margin:6px 0; }
+    .login-box button { width:100%; padding:8px; }
+    .user-info { display:none; text-align:center; margin:20px; }
+  </style>
 
   <!-- Adobe digitalData -->
   <script>
@@ -24,10 +28,7 @@
       page: {
         pageInfo: {
           pageName: "Home",
-          siteSection: "Homepage",
-          language: "en",
-          pageURL: window.location.href,
-          pageTitle: document.title
+          pageURL: location.href
         }
       },
       user: {
@@ -42,172 +43,120 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: "page_view",
-      page_name: digitalData.page.pageInfo.pageName,
-      page_url: digitalData.page.pageInfo.pageURL,
-      page_title: digitalData.page.pageInfo.pageTitle,
-      site_section: digitalData.page.pageInfo.siteSection,
-      language: digitalData.page.pageInfo.language
+      page_name: "Home"
     });
   </script>
 </head>
 
 <body>
-  <!-- GTM (noscript) -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
-  <!-- End GTM -->
 
-  <header>
-    <div class="container">
-      <div class="logo">ModernWeb</div>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="#" id="signInBtn">Sign In</a></li>
-          <li><a href="#" id="signOutBtn" style="display:none;">Sign Out</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+<header>
+  <h2 style="text-align:center">Modern Web Design</h2>
+  <nav style="text-align:center">
+    <a href="#">Home</a> |
+    <a href="#">Shop</a> |
+    <a href="#">Cart</a> |
+    <a href="#" id="loginNav">Sign In</a> |
+    <a href="#" id="logoutNav" style="display:none;">Sign Out</a>
+  </nav>
+</header>
 
-  <section class="hero">
-    <div class="container">
-      <h1>Welcome to Modern Web Design</h1>
-      <p>Creating beautiful, responsive websites for the modern world.</p>
-      <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
-    </div>
-  </section>
+<!-- LOGIN FORM -->
+<div class="login-box" id="loginBox">
+  <h3>Sign In</h3>
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button id="loginBtn">Login</button>
+  <p id="loginError" style="color:red; display:none;">Invalid credentials</p>
+</div>
 
-  <section class="features">
-    <div class="container">
-      <div class="feature-box">
-        <i class="fas fa-mobile-alt"></i>
-        <h3>Responsive Design</h3>
-        <p>Our websites look great on any device.</p>
-      </div>
-      <div class="feature-box">
-        <i class="fas fa-bolt"></i>
-        <h3>Fast Performance</h3>
-        <p>Optimized for speed and performance.</p>
-      </div>
-      <div class="feature-box">
-        <i class="fas fa-paint-brush"></i>
-        <h3>Modern Design</h3>
-        <p>Clean, contemporary designs.</p>
-      </div>
-    </div>
-  </section>
+<!-- USER INFO -->
+<div class="user-info" id="userInfo">
+  <h3>Welcome, <span id="userName"></span></h3>
+  <p>You are logged in.</p>
+</div>
 
-  <footer>
-    <div class="container">
-      <p>&copy; 2023 Modern Web Design</p>
-    </div>
-  </footer>
+<script>
+  const loginBox = document.getElementById("loginBox");
+  const userInfo = document.getElementById("userInfo");
+  const loginNav = document.getElementById("loginNav");
+  const logoutNav = document.getElementById("logoutNav");
 
-  <!-- Explore Services Click -->
-  <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-      e.preventDefault();
-      const destination = this.href;
+  const storedUser = JSON.parse(localStorage.getItem("user"));
 
-      digitalData.event.push({
-        event: "buttonClick",
-        eventInfo: {
-          buttonID: "exploreServicesBtn",
-          buttonText: "Explore Our Services",
-          destinationURL: destination,
-          interactionType: "click",
-          timestamp: new Date().toISOString()
-        }
-      });
+  // ---------- PAGE LOAD SESSION CHECK ----------
+  if (storedUser) {
+    setLoggedInState(storedUser);
+  }
 
-      window.dataLayer.push({
-        event: "explore_services_click",
-        button_text: "Explore Our Services",
-        button_id: "exploreServicesBtn",
-        page_name: digitalData.page.pageInfo.pageName
-      });
+  // ---------- SHOW LOGIN ----------
+  loginNav.addEventListener("click", (e) => {
+    e.preventDefault();
+    loginBox.style.display = "block";
+  });
 
-      setTimeout(() => {
-        window.location.href = destination;
-      }, 300);
-    });
-  </script>
+  // ---------- LOGIN ----------
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-  <!-- Sign In / Sign Out -->
-  <script>
-    const signInBtn = document.getElementById("signInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
+    // Dummy validation (real sites validate from backend)
+    if (email === "user@test.com" && password === "123456") {
 
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-
-    if (loggedIn) {
-      signInBtn.style.display = "none";
-      signOutBtn.style.display = "inline";
-      digitalData.user.isLoggedIn = true;
-    }
-
-    signInBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-
-      localStorage.setItem("isLoggedIn", "true");
-
-      digitalData.user = {
-        isLoggedIn: true,
+      const user = {
+        email,
         firstName: "Durga",
-        middleName: "Prasad",
-        lastName: "Maddipatla",
-        age: 22,
-        gender: "male"
+        lastName: "Maddipatla"
       };
 
+      localStorage.setItem("user", JSON.stringify(user));
+      setLoggedInState(user);
+
+      // Adobe Analytics
+      digitalData.user = { isLoggedIn: true, email };
       digitalData.event.push({
         event: "userLogin",
-        eventInfo: {
-          loginMethod: "email",
-          timestamp: new Date().toISOString()
-        }
+        eventInfo: { method: "email" }
       });
 
+      // GTM
       window.dataLayer.push({
         event: "login",
         login_method: "email",
-        user_status: "logged_in",
-        user_name: "Durga Maddipatla"
+        user_email: email
       });
 
-      signInBtn.style.display = "none";
-      signOutBtn.style.display = "inline";
-    });
+    } else {
+      document.getElementById("loginError").style.display = "block";
+    }
+  });
 
-    signOutBtn.addEventListener("click", function (e) {
-      e.preventDefault();
+  // ---------- LOGOUT ----------
+  logoutNav.addEventListener("click", (e) => {
+    e.preventDefault();
 
-      localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
 
-      digitalData.user.isLoggedIn = false;
+    digitalData.user.isLoggedIn = false;
+    digitalData.event.push({ event: "userLogout" });
 
-      digitalData.event.push({
-        event: "userLogout",
-        eventInfo: {
-          timestamp: new Date().toISOString()
-        }
-      });
+    window.dataLayer.push({ event: "logout" });
 
-      window.dataLayer.push({
-        event: "logout",
-        user_status: "logged_out"
-      });
+    loginBox.style.display = "none";
+    userInfo.style.display = "none";
+    loginNav.style.display = "inline";
+    logoutNav.style.display = "none";
+  });
 
-      signInBtn.style.display = "inline";
-      signOutBtn.style.display = "none";
-    });
-  </script>
+  // ---------- UI STATE ----------
+  function setLoggedInState(user) {
+    loginBox.style.display = "none";
+    userInfo.style.display = "block";
+    document.getElementById("userName").innerText = user.firstName;
+    loginNav.style.display = "none";
+    logoutNav.style.display = "inline";
+  }
+</script>
 
 </body>
 </html>
