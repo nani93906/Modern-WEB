@@ -4,6 +4,10 @@
   <title>Product Details</title>
   <link rel="stylesheet" href="styles.css">
 
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
   <style>
     .pdp-container {
       max-width:600px;
@@ -60,71 +64,103 @@
 </div>
 
 <script>
-  const products = {
-    1:{name:"Laptop",price:80000,old:95000,color:"Silver",brand:"Dell",warranty:"1 Year",stock:"In Stock"},
-    2:{name:"Smartphone",price:45000,old:52000,color:"Black",brand:"Samsung",warranty:"1 Year",stock:"In Stock"},
-    3:{name:"Headphones",price:3500,old:5000,color:"Blue",brand:"Sony",warranty:"6 Months",stock:"In Stock"},
-    4:{name:"Smart Watch",price:9000,old:12000,color:"Black",brand:"Boat",warranty:"1 Year",stock:"In Stock"},
-    5:{name:"Gaming Mouse",price:1500,old:2500,color:"Red",brand:"Logitech",warranty:"1 Year",stock:"In Stock"},
-    6:{name:"Keyboard",price:2200,old:3500,color:"White",brand:"HP",warranty:"1 Year",stock:"In Stock"},
-    7:{name:"Tablet",price:30000,old:38000,color:"Grey",brand:"Lenovo",warranty:"1 Year",stock:"In Stock"},
-    8:{name:"Monitor",price:12000,old:15000,color:"Black",brand:"LG",warranty:"1 Year",stock:"In Stock"},
-    9:{name:"Speaker",price:5000,old:7500,color:"Brown",brand:"JBL",warranty:"1 Year",stock:"In Stock"},
-    10:{name:"Camera",price:55000,old:65000,color:"Black",brand:"Canon",warranty:"2 Years",stock:"In Stock"},
-    11:{name:"Power Bank",price:1200,old:2000,color:"White",brand:"Mi",warranty:"6 Months",stock:"In Stock"},
-    12:{name:"External HDD",price:4800,old:6500,color:"Black",brand:"Seagate",warranty:"2 Years",stock:"In Stock"}
-  };
 
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+const products = {
+  1:{name:"Laptop",price:80000,old:95000,color:"Silver",brand:"Dell",warranty:"1 Year",stock:"In Stock"},
+  2:{name:"Smartphone",price:45000,old:52000,color:"Black",brand:"Samsung",warranty:"1 Year",stock:"In Stock"},
+  3:{name:"Headphones",price:3500,old:5000,color:"Blue",brand:"Sony",warranty:"6 Months",stock:"In Stock"},
+  4:{name:"Smart Watch",price:9000,old:12000,color:"Black",brand:"Boat",warranty:"1 Year",stock:"In Stock"},
+  5:{name:"Gaming Mouse",price:1500,old:2500,color:"Red",brand:"Logitech",warranty:"1 Year",stock:"In Stock"},
+  6:{name:"Keyboard",price:2200,old:3500,color:"White",brand:"HP",warranty:"1 Year",stock:"In Stock"},
+  7:{name:"Tablet",price:30000,old:38000,color:"Grey",brand:"Lenovo",warranty:"1 Year",stock:"In Stock"},
+  8:{name:"Monitor",price:12000,old:15000,color:"Black",brand:"LG",warranty:"1 Year",stock:"In Stock"},
+  9:{name:"Speaker",price:5000,old:7500,color:"Brown",brand:"JBL",warranty:"1 Year",stock:"In Stock"},
+  10:{name:"Camera",price:55000,old:65000,color:"Black",brand:"Canon",warranty:"2 Years",stock:"In Stock"},
+  11:{name:"Power Bank",price:1200,old:2000,color:"White",brand:"Mi",warranty:"6 Months",stock:"In Stock"},
+  12:{name:"External HDD",price:4800,old:6500,color:"Black",brand:"Seagate",warranty:"2 Years",stock:"In Stock"}
+};
 
-  if(products[id]){
-    const p = products[id];
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
 
-    document.getElementById("productName").innerText = p.name;
-    document.getElementById("brand").innerText = "Brand: " + p.brand;
-    document.getElementById("color").innerText = "Color: " + p.color;
-    document.getElementById("warranty").innerText = "Warranty: " + p.warranty;
-    document.getElementById("stock").innerText = "Availability: " + p.stock;
-    document.getElementById("price").innerText = "₹" + p.price.toLocaleString();
-    document.getElementById("oldPrice").innerText = "₹" + p.old.toLocaleString();
+if(products[id]){
 
-    window.dataLayer = window.dataLayer || [];
+  const p = products[id];
+
+  document.getElementById("productName").innerText = p.name;
+  document.getElementById("brand").innerText = "Brand: " + p.brand;
+  document.getElementById("color").innerText = "Color: " + p.color;
+  document.getElementById("warranty").innerText = "Warranty: " + p.warranty;
+  document.getElementById("stock").innerText = "Availability: " + p.stock;
+  document.getElementById("price").innerText = "₹" + p.price.toLocaleString();
+  document.getElementById("oldPrice").innerText = "₹" + p.old.toLocaleString();
+
+
+  /* =========================
+     GA4 view_item EVENT
+  ========================== */
+
+  window.dataLayer.push({
+    event: "view_item",
+    ecommerce: {
+      currency: "INR",
+      value: p.price,
+      items: [{
+        item_id: id.toString(),
+        item_name: p.name,
+        price: p.price,
+        item_brand: p.brand,
+        item_category: "Electronics",
+        item_variant: p.color,
+        quantity: 1
+      }]
+    }
+  });
+
+
+  /* =========================
+     ADD TO CART EVENT
+  ========================== */
+
+  document.getElementById("addToCartBtn").addEventListener("click", function(){
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.push({
+      id: id,
+      name: p.name,
+      price: p.price
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
     window.dataLayer.push({
-      event:"page_load",
-      page_type:"PDP",
-      product_id:id,
-      product_name:p.name,
-      product_price:p.price,
-      currency:"INR"
+      event: "add_to_cart",
+      ecommerce: {
+        currency: "INR",
+        value: p.price,
+        items: [{
+          item_id: id.toString(),
+          item_name: p.name,
+          price: p.price,
+          item_brand: p.brand,
+          item_category: "Electronics",
+          item_variant: p.color,
+          quantity: 1
+        }]
+      }
     });
 
-    document.getElementById("addToCartBtn").addEventListener("click",function(){
+    alert("Product added to cart");
 
-      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  });
 
-      cart.push({
-        id: id,
-        name: p.name,
-        price: p.price
-      });
+} else {
 
-      localStorage.setItem("cart", JSON.stringify(cart));
+  document.body.innerHTML="<h2 style='text-align:center'>Product Not Found</h2>";
 
-      window.dataLayer.push({
-        event:"add_to_cart",
-        product_id:id,
-        product_name:p.name,
-        product_price:p.price,
-        currency:"INR"
-      });
+}
 
-      alert("Product added to cart");
-    });
-
-  } else {
-    document.body.innerHTML="<h2 style='text-align:center'>Product Not Found</h2>";
-  }
 </script>
 
 </body>
