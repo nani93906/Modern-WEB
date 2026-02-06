@@ -8,11 +8,6 @@
 
   <script>
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "page_load",
-      page_name: "Products",
-      page_type: "PLP"
-    });
   </script>
 
   <style>
@@ -78,60 +73,104 @@
   <h1>Our Products</h1>
   <div class="product-grid">
 
-    <!-- 12 Products -->
+<script>
 
-    <!-- Template repeated -->
-    
-    <script>
-      const productList = [
-        {id:1,name:"Laptop",price:80000,old:95000,color:"Silver"},
-        {id:2,name:"Smartphone",price:45000,old:52000,color:"Black"},
-        {id:3,name:"Headphones",price:3500,old:5000,color:"Blue"},
-        {id:4,name:"Smart Watch",price:9000,old:12000,color:"Black"},
-        {id:5,name:"Gaming Mouse",price:1500,old:2500,color:"Red"},
-        {id:6,name:"Keyboard",price:2200,old:3500,color:"White"},
-        {id:7,name:"Tablet",price:30000,old:38000,color:"Grey"},
-        {id:8,name:"Monitor",price:12000,old:15000,color:"Black"},
-        {id:9,name:"Speaker",price:5000,old:7500,color:"Brown"},
-        {id:10,name:"Camera",price:55000,old:65000,color:"Black"},
-        {id:11,name:"Power Bank",price:1200,old:2000,color:"White"},
-        {id:12,name:"External HDD",price:4800,old:6500,color:"Black"}
-      ];
+const productList = [
+  {id:1,name:"Laptop",price:80000,old:95000,color:"Silver"},
+  {id:2,name:"Smartphone",price:45000,old:52000,color:"Black"},
+  {id:3,name:"Headphones",price:3500,old:5000,color:"Blue"},
+  {id:4,name:"Smart Watch",price:9000,old:12000,color:"Black"},
+  {id:5,name:"Gaming Mouse",price:1500,old:2500,color:"Red"},
+  {id:6,name:"Keyboard",price:2200,old:3500,color:"White"},
+  {id:7,name:"Tablet",price:30000,old:38000,color:"Grey"},
+  {id:8,name:"Monitor",price:12000,old:15000,color:"Black"},
+  {id:9,name:"Speaker",price:5000,old:7500,color:"Brown"},
+  {id:10,name:"Camera",price:55000,old:65000,color:"Black"},
+  {id:11,name:"Power Bank",price:1200,old:2000,color:"White"},
+  {id:12,name:"External HDD",price:4800,old:6500,color:"Black"}
+];
 
-      document.write(productList.map(p => `
-        <div class="product-card">
-          <h3>${p.name}</h3>
-          <p>Color: ${p.color}</p>
-          <div class="price">₹${p.price.toLocaleString()}</div>
-          <div class="old-price">₹${p.old.toLocaleString()}</div>
-          <div class="discount">${Math.round((1 - p.price/p.old)*100)}% OFF</div>
-          <a href="productPDP.html?id=${p.id}" 
-             class="btn product-link"
-             data-id="${p.id}"
-             data-name="${p.name}"
-             data-price="${p.price}">
-             View Details
-          </a>
-        </div>
-      `).join(""));
-    </script>
+/* ===========================
+   GA4 view_item_list EVENT
+=========================== */
+
+window.dataLayer.push({
+  event: "view_item_list",
+  ecommerce: {
+    item_list_name: "Product Listing Page",
+    items: productList.map((p, index) => ({
+      item_id: p.id.toString(),
+      item_name: p.name,
+      price: p.price,
+      item_brand: "ModernWeb",
+      item_category: "Electronics",
+      item_variant: p.color,
+      index: index + 1,
+      currency: "INR"
+    }))
+  }
+});
+
+/* ===========================
+   RENDER PRODUCTS
+=========================== */
+
+document.write(productList.map((p,index) => `
+  <div class="product-card">
+    <h3>${p.name}</h3>
+    <p>Color: ${p.color}</p>
+    <div class="price">₹${p.price.toLocaleString()}</div>
+    <div class="old-price">₹${p.old.toLocaleString()}</div>
+    <div class="discount">${Math.round((1 - p.price/p.old)*100)}% OFF</div>
+
+    <a href="productPDP.html?id=${p.id}" 
+       class="btn product-link"
+       data-id="${p.id}"
+       data-name="${p.name}"
+       data-price="${p.price}"
+       data-color="${p.color}"
+       data-index="${index+1}">
+       View Details
+    </a>
+  </div>
+`).join(""));
+
+</script>
 
   </div>
 </section>
 
 <script>
-  document.addEventListener("click", function(e){
-    if(e.target.classList.contains("product-link")){
-      window.dataLayer.push({
-        event: "product_click",
-        product_id: e.target.dataset.id,
-        product_name: e.target.dataset.name,
-        product_price: e.target.dataset.price,
-        currency: "INR",
-        page_type: "PLP"
-      });
-    }
-  });
+
+/* ===========================
+   GA4 select_item EVENT
+=========================== */
+
+document.addEventListener("click", function(e){
+
+  if(e.target.classList.contains("product-link")){
+
+    window.dataLayer.push({
+      event: "select_item",
+      ecommerce: {
+        item_list_name: "Product Listing Page",
+        items: [{
+          item_id: e.target.dataset.id,
+          item_name: e.target.dataset.name,
+          price: Number(e.target.dataset.price),
+          item_brand: "ModernWeb",
+          item_category: "Electronics",
+          item_variant: e.target.dataset.color,
+          index: Number(e.target.dataset.index),
+          currency: "INR"
+        }]
+      }
+    });
+
+  }
+
+});
+
 </script>
 
 </body>
