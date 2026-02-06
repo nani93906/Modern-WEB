@@ -177,7 +177,6 @@ signInBtn.addEventListener("click", function(e){
 
   dataLayer.push({
     event: "login_initiated",
-    login_method: "email",
     user_type: user ? user.userType : "guest"
   });
 });
@@ -191,7 +190,7 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
   if (email === "user@test.com" && password === "123456") {
 
     localStorage.setItem("user", JSON.stringify({
-      userId: "Uxypyty==",
+      userId: Uxypyty==,
       userType: "registered"
     }));
 
@@ -201,8 +200,7 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 
     dataLayer.push({
       event: "login_success",
-      login_method: "email",
-      user_id: "Uxypyty==",
+      user_id: Uxypyty==,
       user_type: "registered"
     });
 
@@ -212,7 +210,6 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 
     dataLayer.push({
       event: "login_failed",
-      login_method: "email",
       user_type: user ? user.userType : "guest"
     });
   }
@@ -236,3 +233,4 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
