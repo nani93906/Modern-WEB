@@ -138,7 +138,7 @@ document.querySelectorAll("nav a").forEach(function(link){
     dataLayer.push({
       event: "navigation_click",
       link_text: this.innerText,
-      link_url: this.href, 
+      link_url: this.href
     });
 
   });
@@ -176,8 +176,6 @@ if (user) {
 signInBtn.addEventListener("click", function(e){
   e.preventDefault();
   loginModal.style.display = "flex";
-
-  });
 });
 
 /* LOGIN SUBMIT */
@@ -233,4 +231,3 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
-
