@@ -3,6 +3,9 @@
 <head>
   <title>Checkout</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
 
   <style>
     .checkout-container {
@@ -41,10 +44,6 @@
       margin-top: 20px;
     }
 
-    .place-order-btn:hover {
-      background-color: #0056b3;
-    }
-
     .form-group {
       margin-bottom: 15px;
     }
@@ -64,13 +63,8 @@
       display: none;
     }
 
-    .success {
-      color: green;
-    }
-
-    .error {
-      color: red;
-    }
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
@@ -92,25 +86,11 @@
 
   <h2>Shipping Address</h2>
 
-  <div class="form-group">
-    <input type="text" id="fullName" placeholder="Full Name">
-  </div>
-
-  <div class="form-group">
-    <input type="text" id="mobile" placeholder="Mobile Number">
-  </div>
-
-  <div class="form-group">
-    <textarea id="address" placeholder="Full Address"></textarea>
-  </div>
-
-  <div class="form-group">
-    <input type="text" id="city" placeholder="City">
-  </div>
-
-  <div class="form-group">
-    <input type="text" id="pincode" placeholder="Pincode">
-  </div>
+  <div class="form-group"><input type="text" id="fullName" placeholder="Full Name"></div>
+  <div class="form-group"><input type="text" id="mobile" placeholder="Mobile Number"></div>
+  <div class="form-group"><textarea id="address" placeholder="Full Address"></textarea></div>
+  <div class="form-group"><input type="text" id="city" placeholder="City"></div>
+  <div class="form-group"><input type="text" id="pincode" placeholder="Pincode"></div>
 
   <h2>Order Summary</h2>
   <div id="orderSummary"></div>
@@ -131,74 +111,94 @@
 </div>
 
 <script>
-  window.dataLayer = window.dataLayer || [];
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const summaryDiv = document.getElementById("orderSummary");
-  const totalDiv = document.getElementById("orderTotal");
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const summaryDiv = document.getElementById("orderSummary");
+const totalDiv = document.getElementById("orderTotal");
 
-  let total = 0;
+let total = 0;
+let itemsArray = [];
 
-  cart.forEach(item => {
-    total += item.price;
+cart.forEach(item => {
 
-    summaryDiv.innerHTML += `
-      <div class="summary-item">
-        <span>${item.name}</span>
-        <span>₹${item.price.toLocaleString()}</span>
-      </div>
-    `;
+  total += item.price;
+
+  itemsArray.push({
+    item_id: item.id.toString(),
+    item_name: item.name,
+    price: item.price,
+    quantity: 1
   });
 
-  totalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
+  summaryDiv.innerHTML += `
+    <div class="summary-item">
+      <span>${item.name}</span>
+      <span>₹${item.price.toLocaleString()}</span>
+    </div>
+  `;
+});
 
-  window.dataLayer.push({
-    event: "begin_checkout",
-    checkout_value: total,
-    currency: "INR"
-  });
+totalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
-  document.getElementById("placeOrderBtn").addEventListener("click", function(){
+/* GA4 begin_checkout */
+window.dataLayer.push({
+  event: "begin_checkout",
+  ecommerce: {
+    currency: "INR",
+    value: total,
+    items: itemsArray
+  }
+});
 
-    const fullName = document.getElementById("fullName").value.trim();
-    const mobile = document.getElementById("mobile").value.trim();
-    const address = document.getElementById("address").value.trim();
-    const city = document.getElementById("city").value.trim();
-    const pincode = document.getElementById("pincode").value.trim();
+document.getElementById("placeOrderBtn").addEventListener("click", function(){
 
-    const successMsg = document.getElementById("successMessage");
-    const errorMsg = document.getElementById("errorMessage");
+  const fullName = document.getElementById("fullName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const city = document.getElementById("city").value.trim();
+  const pincode = document.getElementById("pincode").value.trim();
 
-    successMsg.style.display = "none";
-    errorMsg.style.display = "none";
+  const successMsg = document.getElementById("successMessage");
+  const errorMsg = document.getElementById("errorMessage");
 
-    if (!fullName || !mobile || !address || !city || !pincode) {
+  successMsg.style.display = "none";
+  errorMsg.style.display = "none";
 
-      errorMsg.style.display = "block";
+  if (!fullName || !mobile || !address || !city || !pincode) {
 
-      window.dataLayer.push({
-        event: "order_failed",
-        reason: "shipping_details_missing"
-      });
-
-      return;
-    }
-
-    successMsg.style.display = "block";
+    errorMsg.style.display = "block";
 
     window.dataLayer.push({
-      event: "purchase",
-      purchase_value: total,
-      currency: "INR"
+      event: "checkout_error",
+      error_type: "missing_shipping_details"
     });
 
-    localStorage.removeItem("cart");
+    return;
+  }
 
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
+  successMsg.style.display = "block";
 
+  const transactionId = "T" + new Date().getTime();
+
+  /* GA4 purchase */
+  window.dataLayer.push({
+    event: "purchase",
+    ecommerce: {
+      transaction_id: transactionId,
+      currency: "INR",
+      value: total,
+      items: itemsArray
+    }
   });
+
+  localStorage.removeItem("cart");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 2000);
+
+});
+
 </script>
 
 </body>
