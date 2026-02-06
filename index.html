@@ -7,13 +7,13 @@
   ========================== -->
   <script>
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname,
-      page_name: "homepage",
-      user_id: "Uxypyty==",
-      user_type: "registered"
+
+    const existingUser = JSON.parse(localStorage.getItem("user"));
+
+    window.dataLayer.push({ 
+      page_URL: window.location.href,
+      page_Name: "homepage",
+      user_type: existingUser ? existingUser.userType : "guest"
     });
   </script>
 
@@ -139,9 +139,7 @@ document.querySelectorAll("nav a").forEach(function(link){
     dataLayer.push({
       event: "navigation_click",
       link_text: this.innerText,
-      link_url: this.href,
-      user_id: "Uxypyty==",
-      user_type: "registered"
+      link_url: this.href
     });
   });
 });
@@ -150,15 +148,11 @@ document.querySelectorAll("nav a").forEach(function(link){
    EXPLORE SERVICES BUTTON
 ========================= */
 document.getElementById("exploreBtn").addEventListener("click", function(){
-
   dataLayer.push({
     event: "select_content",
     content_type: "cta_button",
-    item_name: "Explore Our Services",
-    user_id: "Uxypyty==",
-    user_type: "registered"
+    item_name: "Explore Our Services"
   });
-
   window.location.href = "services.html";
 });
 
@@ -169,17 +163,22 @@ const signInBtn = document.getElementById("signInBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 const loginModal = document.getElementById("loginModal");
 
+const user = JSON.parse(localStorage.getItem("user"));
+
+if (user) {
+  signInBtn.style.display = "none";
+  signOutBtn.style.display = "inline";
+}
+
 /* LOGIN INITIATED */
 signInBtn.addEventListener("click", function(e){
   e.preventDefault();
   loginModal.style.display = "flex";
 
   dataLayer.push({
-    event: "login",
-    method: "email",
-    login_status: "initiated",
-    user_id: "Uxypyty==",
-    user_type: "registered"
+    event: "login_initiated",
+    login_method: "email",
+    user_type: user ? user.userType : "guest"
   });
 });
 
@@ -191,14 +190,18 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 
   if (email === "user@test.com" && password === "123456") {
 
+    localStorage.setItem("user", JSON.stringify({
+      userId: "Uxypyty==",
+      userType: "registered"
+    }));
+
     loginModal.style.display = "none";
     signInBtn.style.display = "none";
     signOutBtn.style.display = "inline";
 
     dataLayer.push({
-      event: "login",
-      method: "email",
-      login_status: "success",
+      event: "login_success",
+      login_method: "email",
       user_id: "Uxypyty==",
       user_type: "registered"
     });
@@ -208,11 +211,9 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
     document.getElementById("loginError").style.display = "block";
 
     dataLayer.push({
-      event: "login",
-      method: "email",
-      login_status: "failed",
-      user_id: "Uxypyty==",
-      user_type: "registered"
+      event: "login_failed",
+      login_method: "email",
+      user_type: user ? user.userType : "guest"
     });
   }
 });
@@ -221,13 +222,13 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 signOutBtn.addEventListener("click", function(e){
   e.preventDefault();
 
+  localStorage.removeItem("user");
+
   signInBtn.style.display = "inline";
   signOutBtn.style.display = "none";
 
   dataLayer.push({
-    event: "logout",
-    user_id: "Uxypyty==",
-    user_type: "registered"
+    event: "logout"
   });
 });
 
@@ -235,3 +236,4 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
