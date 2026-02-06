@@ -73,6 +73,9 @@
       <nav>
         <ul>
           <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
           <li><a href="products.html">Our Products</a></li>
           <li><a href="cart.html">Cart</a></li>
           <li><a href="#" id="signInBtn">Sign In</a></li>
@@ -126,7 +129,6 @@ if (user) {
 /* LOGIN INITIATED */
 signInBtn.addEventListener("click", function(e){
   e.preventDefault();
-
   loginModal.style.display = "flex";
 
   window.dataLayer.push({
@@ -167,7 +169,6 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
       failure_reason: "invalid_credentials"
     });
   }
-
 });
 
 /* LOGOUT */
