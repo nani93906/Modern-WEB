@@ -201,7 +201,7 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 
     dataLayer.push({
       event: "login_success",
-      user_id: "Uxypyty==",
+      user_id: btoa(email),
       user_type: "registered"
     });
 
@@ -235,4 +235,5 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
 
