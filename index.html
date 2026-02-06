@@ -9,8 +9,9 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname
+      page_URL: window.location.href,
+      page_path: window.location.pathname,
+      page_Name: "homepage"
     });
   </script>
 
@@ -137,7 +138,7 @@ document.querySelectorAll("nav a").forEach(function(link){
     dataLayer.push({
       event: "navigation_click",
       link_text: this.innerText,
-      link_url: this.href
+      link_url: this.href, 
     });
 
   });
@@ -176,9 +177,6 @@ signInBtn.addEventListener("click", function(e){
   e.preventDefault();
   loginModal.style.display = "flex";
 
-  dataLayer.push({
-    event: "login",
-    method: "initiate"
   });
 });
 
@@ -235,3 +233,4 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
