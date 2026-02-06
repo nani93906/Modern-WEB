@@ -3,6 +3,9 @@
 <head>
   <title>Shopping Cart</title>
   <link rel="stylesheet" href="styles.css">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
 
   <style>
     .cart-container {
@@ -31,10 +34,6 @@
       cursor: pointer;
     }
 
-    .remove-btn:hover {
-      background-color: #b02a37;
-    }
-
     .checkout-btn {
       width: 100%;
       padding: 15px;
@@ -46,10 +45,6 @@
       border-radius: 6px;
       cursor: pointer;
       margin-top: 20px;
-    }
-
-    .checkout-btn:hover {
-      background-color: #218838;
     }
 
     .total {
@@ -91,73 +86,96 @@
 </div>
 
 <script>
-  window.dataLayer = window.dataLayer || [];
 
-  function loadCart() {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const cartItemsDiv = document.getElementById("cartItems");
-    const cartTotalDiv = document.getElementById("cartTotal");
-    const checkoutBtn = document.getElementById("checkoutBtn");
+function loadCart() {
 
-    cartItemsDiv.innerHTML = "";
-    let total = 0;
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const cartItemsDiv = document.getElementById("cartItems");
+  const cartTotalDiv = document.getElementById("cartTotal");
+  const checkoutBtn = document.getElementById("checkoutBtn");
 
-    if (cart.length === 0) {
-      cartItemsDiv.innerHTML = "<div class='empty'>Your cart is empty</div>";
-      cartTotalDiv.innerHTML = "";
-      checkoutBtn.style.display = "none";
-      return;
-    }
+  cartItemsDiv.innerHTML = "";
+  let total = 0;
+  let itemsArray = [];
 
-    checkoutBtn.style.display = "block";
+  if (cart.length === 0) {
+    cartItemsDiv.innerHTML = "<div class='empty'>Your cart is empty</div>";
+    cartTotalDiv.innerHTML = "";
+    checkoutBtn.style.display = "none";
+    return;
+  }
 
-    cart.forEach((item, index) => {
-      total += item.price;
+  checkoutBtn.style.display = "block";
 
-      cartItemsDiv.innerHTML += `
-        <div class="cart-item">
-          <div>
-            <h4>${item.name}</h4>
-            <p>₹${item.price.toLocaleString()}</p>
-          </div>
-          <button class="remove-btn" onclick="removeItem(${index})">
-            Remove
-          </button>
+  cart.forEach((item, index) => {
+
+    total += item.price;
+
+    itemsArray.push({
+      item_id: item.id.toString(),
+      item_name: item.name,
+      price: item.price,
+      quantity: 1
+    });
+
+    cartItemsDiv.innerHTML += `
+      <div class="cart-item">
+        <div>
+          <h4>${item.name}</h4>
+          <p>₹${item.price.toLocaleString()}</p>
         </div>
-      `;
-    });
+        <button class="remove-btn" onclick="removeItem(${index})">
+          Remove
+        </button>
+      </div>
+    `;
+  });
 
-    cartTotalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
+  cartTotalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
-    window.dataLayer.push({
-      event: "view_cart",
-      cart_value: total,
-      currency: "INR"
-    });
-  }
+  /* GA4 view_cart */
+  window.dataLayer.push({
+    event: "view_cart",
+    ecommerce: {
+      currency: "INR",
+      value: total,
+      items: itemsArray
+    }
+  });
+}
 
-  function removeItem(index) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const removedItem = cart[index];
+function removeItem(index) {
 
-    cart.splice(index, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const removedItem = cart[index];
 
-    window.dataLayer.push({
-      event: "remove_from_cart",
-      product_name: removedItem.name,
-      product_price: removedItem.price,
-      currency: "INR"
-    });
+  cart.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
 
-    loadCart();
-  }
-
-  document.getElementById("checkoutBtn").addEventListener("click", function() {
-    window.location.href = "checkout.html";
+  /* GA4 remove_from_cart */
+  window.dataLayer.push({
+    event: "remove_from_cart",
+    ecommerce: {
+      currency: "INR",
+      value: removedItem.price,
+      items: [{
+        item_id: removedItem.id.toString(),
+        item_name: removedItem.name,
+        price: removedItem.price,
+        quantity: 1
+      }]
+    }
   });
 
   loadCart();
+}
+
+document.getElementById("checkoutBtn").addEventListener("click", function() {
+  window.location.href = "checkout.html";
+});
+
+loadCart();
+
 </script>
 
 </body>
