@@ -1,39 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details</title>
-  <link rel="stylesheet" href="styles.css" />
-
-  <script>
-    window.dataLayer = window.dataLayer || [];
-  </script>
-
-  <style>
-    .pdp-container {
-      max-width: 600px;
-      margin: 50px auto;
-      border: 1px solid #ddd;
-      padding: 30px;
-      border-radius: 8px;
-      text-align: center;
-      background: #fff;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 8px 15px;
-      background: #28a745;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      cursor: pointer;
-      margin-top: 15px;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <header>
@@ -49,62 +19,69 @@
   </div>
 </header>
 
-<div class="pdp-container">
+<div style="max-width:600px;margin:40px auto;border:1px solid #ddd;padding:20px;border-radius:8px;">
   <h2 id="productName"></h2>
-  <p id="productDescription"></p>
-  <h3 id="productPrice"></h3>
-
-  <button class="btn" id="addToCartBtn">Add to Cart</button>
+  <p id="brand"></p>
+  <p id="color"></p>
+  <p id="warranty"></p>
+  <p id="stock"></p>
+  <h3 id="price"></h3>
+  <p id="oldPrice" style="text-decoration:line-through;color:grey;"></p>
+  <button id="addToCartBtn">Add to Cart</button>
 </div>
 
 <script>
   const products = {
-    1: {
-      name: "Laptop",
-      description: "High performance laptop with powerful processor",
-      price: 800
-    },
-    2: {
-      name: "Smartphone",
-      description: "Latest generation smartphone with advanced features",
-      price: 600
-    }
+    1:{name:"Laptop",price:80000,old:95000,color:"Silver",brand:"Dell",warranty:"1 Year",stock:"In Stock"},
+    2:{name:"Smartphone",price:45000,old:52000,color:"Black",brand:"Samsung",warranty:"1 Year",stock:"In Stock"},
+    3:{name:"Headphones",price:3500,old:5000,color:"Blue",brand:"Sony",warranty:"6 Months",stock:"In Stock"},
+    4:{name:"Smart Watch",price:9000,old:12000,color:"Black",brand:"Boat",warranty:"1 Year",stock:"In Stock"},
+    5:{name:"Gaming Mouse",price:1500,old:2500,color:"Red",brand:"Logitech",warranty:"1 Year",stock:"In Stock"},
+    6:{name:"Keyboard",price:2200,old:3500,color:"White",brand:"HP",warranty:"1 Year",stock:"In Stock"},
+    7:{name:"Tablet",price:30000,old:38000,color:"Grey",brand:"Lenovo",warranty:"1 Year",stock:"In Stock"},
+    8:{name:"Monitor",price:12000,old:15000,color:"Black",brand:"LG",warranty:"1 Year",stock:"In Stock"},
+    9:{name:"Speaker",price:5000,old:7500,color:"Brown",brand:"JBL",warranty:"1 Year",stock:"In Stock"},
+    10:{name:"Camera",price:55000,old:65000,color:"Black",brand:"Canon",warranty:"2 Years",stock:"In Stock"},
+    11:{name:"Power Bank",price:1200,old:2000,color:"White",brand:"Mi",warranty:"6 Months",stock:"In Stock"},
+    12:{name:"External HDD",price:4800,old:6500,color:"Black",brand:"Seagate",warranty:"2 Years",stock:"In Stock"}
   };
 
   const params = new URLSearchParams(window.location.search);
-  const productId = params.get("id");
-  const product = products[productId];
+  const id = params.get("id");
 
-  if (product) {
+  if(products[id]){
+    const p = products[id];
 
-    document.getElementById("productName").innerText = product.name;
-    document.getElementById("productDescription").innerText = product.description;
-    document.getElementById("productPrice").innerText = "$" + product.price;
+    document.getElementById("productName").innerText = p.name;
+    document.getElementById("brand").innerText = "Brand: " + p.brand;
+    document.getElementById("color").innerText = "Color: " + p.color;
+    document.getElementById("warranty").innerText = "Warranty: " + p.warranty;
+    document.getElementById("stock").innerText = "Availability: " + p.stock;
+    document.getElementById("price").innerText = "₹" + p.price.toLocaleString();
+    document.getElementById("oldPrice").innerText = "₹" + p.old.toLocaleString();
 
-    // PDP Page Load Event
+    window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
-      event: "page_load",
-      page_name: "Product Details",
-      page_type: "PDP",
-      product_id: productId,
-      product_name: product.name,
-      product_price: product.price
+      event:"page_load",
+      page_type:"PDP",
+      product_id:id,
+      product_name:p.name,
+      product_price:p.price,
+      currency:"INR"
     });
 
-    // Add To Cart Event
-    document.getElementById("addToCartBtn").addEventListener("click", function () {
-
+    document.getElementById("addToCartBtn").addEventListener("click",function(){
       window.dataLayer.push({
-        event: "add_to_cart",
-        product_id: productId,
-        product_name: product.name,
-        product_price: product.price,
-        page_type: "PDP"
+        event:"add_to_cart",
+        product_id:id,
+        product_name:p.name,
+        product_price:p.price,
+        currency:"INR"
       });
-
-      alert("Product added to cart!");
+      alert("Product added to cart");
     });
-
+  } else {
+    document.body.innerHTML="<h2 style='text-align:center'>Product Not Found</h2>";
   }
 </script>
 
