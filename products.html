@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Products</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -31,17 +31,20 @@
       background: #fff;
     }
 
-    .product-card h3 {
-      margin-bottom: 10px;
+    .price {
+      font-size: 18px;
+      font-weight: bold;
     }
 
-    .product-card p {
+    .old-price {
+      text-decoration: line-through;
+      color: grey;
       font-size: 14px;
-      color: #555;
     }
 
-    .product-card h4 {
-      margin: 10px 0;
+    .discount {
+      color: green;
+      font-size: 14px;
     }
 
     .btn {
@@ -51,6 +54,7 @@
       color: #fff;
       text-decoration: none;
       border-radius: 4px;
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -72,53 +76,61 @@
 
 <section class="container">
   <h1>Our Products</h1>
-
   <div class="product-grid">
 
-    <!-- Product 1 -->
-    <div class="product-card">
-      <h3>Laptop</h3>
-      <p>High performance laptop</p>
-      <h4>$800</h4>
-      <a href="productPDP.html?id=1"
-         class="btn product-link"
-         data-id="1"
-         data-name="Laptop"
-         data-price="800">
-         View Details
-      </a>
-    </div>
+    <!-- 12 Products -->
 
-    <!-- Product 2 -->
-    <div class="product-card">
-      <h3>Smartphone</h3>
-      <p>Latest generation smartphone</p>
-      <h4>$600</h4>
-      <a href="productPDP.html?id=2"
-         class="btn product-link"
-         data-id="2"
-         data-name="Smartphone"
-         data-price="600">
-         View Details
-      </a>
-    </div>
+    <!-- Template repeated -->
+    
+    <script>
+      const productList = [
+        {id:1,name:"Laptop",price:80000,old:95000,color:"Silver"},
+        {id:2,name:"Smartphone",price:45000,old:52000,color:"Black"},
+        {id:3,name:"Headphones",price:3500,old:5000,color:"Blue"},
+        {id:4,name:"Smart Watch",price:9000,old:12000,color:"Black"},
+        {id:5,name:"Gaming Mouse",price:1500,old:2500,color:"Red"},
+        {id:6,name:"Keyboard",price:2200,old:3500,color:"White"},
+        {id:7,name:"Tablet",price:30000,old:38000,color:"Grey"},
+        {id:8,name:"Monitor",price:12000,old:15000,color:"Black"},
+        {id:9,name:"Speaker",price:5000,old:7500,color:"Brown"},
+        {id:10,name:"Camera",price:55000,old:65000,color:"Black"},
+        {id:11,name:"Power Bank",price:1200,old:2000,color:"White"},
+        {id:12,name:"External HDD",price:4800,old:6500,color:"Black"}
+      ];
+
+      document.write(productList.map(p => `
+        <div class="product-card">
+          <h3>${p.name}</h3>
+          <p>Color: ${p.color}</p>
+          <div class="price">₹${p.price.toLocaleString()}</div>
+          <div class="old-price">₹${p.old.toLocaleString()}</div>
+          <div class="discount">${Math.round((1 - p.price/p.old)*100)}% OFF</div>
+          <a href="productPDP.html?id=${p.id}" 
+             class="btn product-link"
+             data-id="${p.id}"
+             data-name="${p.name}"
+             data-price="${p.price}">
+             View Details
+          </a>
+        </div>
+      `).join(""));
+    </script>
 
   </div>
 </section>
 
 <script>
-  document.querySelectorAll(".product-link").forEach(link => {
-    link.addEventListener("click", function () {
-
+  document.addEventListener("click", function(e){
+    if(e.target.classList.contains("product-link")){
       window.dataLayer.push({
         event: "product_click",
-        product_id: this.dataset.id,
-        product_name: this.dataset.name,
-        product_price: this.dataset.price,
+        product_id: e.target.dataset.id,
+        product_name: e.target.dataset.name,
+        product_price: e.target.dataset.price,
+        currency: "INR",
         page_type: "PLP"
       });
-
-    });
+    }
   });
 </script>
 
