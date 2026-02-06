@@ -107,14 +107,35 @@
 
 window.dataLayer = window.dataLayer || [];
 
-/* PAGE LOAD EVENT */
-window.dataLayer.push({
-  event: "page_load",
-  page_name: "Home",
-  page_url: window.location.href
+/* =========================
+   GA4 PAGE VIEW
+========================= */
+dataLayer.push({
+  event: "page_view",
+  page_title: document.title,
+  page_location: window.location.href,
+  page_path: window.location.pathname
 });
 
-/* LOGIN LOGIC */
+/* =========================
+   HEADER NAVIGATION CLICK
+========================= */
+document.querySelectorAll("nav a").forEach(function(link){
+  link.addEventListener("click", function(){
+
+    dataLayer.push({
+      event: "select_content",
+      content_type: "header_navigation",
+      item_id: this.innerText.toLowerCase().replace(/\s/g, "_"),
+      item_name: this.innerText
+    });
+
+  });
+});
+
+/* =========================
+   LOGIN LOGIC
+========================= */
 const signInBtn = document.getElementById("signInBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 const loginModal = document.getElementById("loginModal");
@@ -131,8 +152,9 @@ signInBtn.addEventListener("click", function(e){
   e.preventDefault();
   loginModal.style.display = "flex";
 
-  window.dataLayer.push({
-    event: "login_initiated"
+  dataLayer.push({
+    event: "login",
+    method: "initiate"
   });
 });
 
@@ -153,20 +175,18 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
     signInBtn.style.display = "none";
     signOutBtn.style.display = "inline";
 
-    window.dataLayer.push({
-      event: "login_success",
-      login_method: "email",
-      userId: "U12345",
-      userType: "registered"
+    dataLayer.push({
+      event: "login",
+      method: "email"
     });
 
   } else {
 
     document.getElementById("loginError").style.display = "block";
 
-    window.dataLayer.push({
-      event: "login_failed",
-      failure_reason: "invalid_credentials"
+    dataLayer.push({
+      event: "login_error",
+      method: "email"
     });
   }
 });
@@ -180,7 +200,7 @@ signOutBtn.addEventListener("click", function(e){
   signInBtn.style.display = "inline";
   signOutBtn.style.display = "none";
 
-  window.dataLayer.push({
+  dataLayer.push({
     event: "logout"
   });
 });
