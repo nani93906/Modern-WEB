@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
 
+  <!-- =========================
+       GA4 PAGE VIEW (ABOVE GTM)
+  ========================== -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
+  </script>
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -56,6 +68,16 @@
       display:none;
       font-size:14px;
     }
+
+    .hero button {
+      margin-top:15px;
+      padding:10px 15px;
+      background:#28a745;
+      color:#fff;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
+    }
   </style>
 
 </head>
@@ -89,6 +111,7 @@
     <div class="container">
       <h1>Welcome to Modern Web Design</h1>
       <p>Creating beautiful, responsive websites for the modern world.</p>
+      <button id="exploreBtn">Explore Our Services</button>
     </div>
   </section>
 
@@ -105,18 +128,6 @@
 
 <script>
 
-window.dataLayer = window.dataLayer || [];
-
-/* =========================
-   GA4 PAGE VIEW
-========================= */
-dataLayer.push({
-  event: "page_view",
-  page_title: document.title,
-  page_location: window.location.href,
-  page_path: window.location.pathname
-});
-
 /* =========================
    HEADER NAVIGATION CLICK
 ========================= */
@@ -124,13 +135,26 @@ document.querySelectorAll("nav a").forEach(function(link){
   link.addEventListener("click", function(){
 
     dataLayer.push({
-      event: "select_content",
-      content_type: "header_navigation",
-      item_id: this.innerText.toLowerCase().replace(/\s/g, "_"),
-      item_name: this.innerText
+      event: "navigation_click",
+      link_text: this.innerText,
+      link_url: this.href
     });
 
   });
+});
+
+/* =========================
+   EXPLORE SERVICES BUTTON
+========================= */
+document.getElementById("exploreBtn").addEventListener("click", function(){
+
+  dataLayer.push({
+    event: "select_content",
+    content_type: "cta_button",
+    item_name: "Explore Our Services"
+  });
+
+  window.location.href = "services.html";
 });
 
 /* =========================
@@ -177,7 +201,9 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
 
     dataLayer.push({
       event: "login",
-      method: "email"
+      method: "email",
+      user_id: "U12345",
+      user_type: "registered"
     });
 
   } else {
