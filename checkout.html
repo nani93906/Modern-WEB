@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .checkout-container {
+      max-width: 700px;
+      margin: 40px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .place-order-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .place-order-btn:hover {
+      background-color: #0056b3;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">ModernWeb</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Our Products</a></li>
+        <li><a href="cart.html">Cart</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="checkout-container">
+  <h2>Order Summary</h2>
+  <div id="orderSummary"></div>
+  <div class="total" id="orderTotal"></div>
+  <button id="placeOrderBtn" class="place-order-btn">
+    Place Order
+  </button>
+</div>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const summaryDiv = document.getElementById("orderSummary");
+  const totalDiv = document.getElementById("orderTotal");
+
+  let total = 0;
+
+  cart.forEach(item => {
+    total += item.price;
+
+    summaryDiv.innerHTML += `
+      <div class="summary-item">
+        <span>${item.name}</span>
+        <span>₹${item.price.toLocaleString()}</span>
+      </div>
+    `;
+  });
+
+  totalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
+
+  window.dataLayer.push({
+    event: "begin_checkout",
+    checkout_value: total,
+    currency: "INR"
+  });
+
+  document.getElementById("placeOrderBtn").addEventListener("click", function(){
+
+    window.dataLayer.push({
+      event: "purchase",
+      purchase_value: total,
+      currency: "INR"
+    });
+
+    localStorage.removeItem("cart");
+
+    alert("Order placed successfully!");
+    window.location.href = "index.html";
+  });
+</script>
+
+</body>
+</html>
