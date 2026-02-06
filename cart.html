@@ -35,6 +35,23 @@
       background-color: #b02a37;
     }
 
+    .checkout-btn {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .checkout-btn:hover {
+      background-color: #218838;
+    }
+
     .total {
       text-align: right;
       font-size: 20px;
@@ -68,6 +85,9 @@
   <h2>Your Cart</h2>
   <div id="cartItems"></div>
   <div class="total" id="cartTotal"></div>
+  <button id="checkoutBtn" class="checkout-btn" style="display:none;">
+    Proceed to Checkout
+  </button>
 </div>
 
 <script>
@@ -77,6 +97,7 @@
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const cartItemsDiv = document.getElementById("cartItems");
     const cartTotalDiv = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
 
     cartItemsDiv.innerHTML = "";
     let total = 0;
@@ -84,8 +105,11 @@
     if (cart.length === 0) {
       cartItemsDiv.innerHTML = "<div class='empty'>Your cart is empty</div>";
       cartTotalDiv.innerHTML = "";
+      checkoutBtn.style.display = "none";
       return;
     }
+
+    checkoutBtn.style.display = "block";
 
     cart.forEach((item, index) => {
       total += item.price;
@@ -128,6 +152,10 @@
 
     loadCart();
   }
+
+  document.getElementById("checkoutBtn").addEventListener("click", function() {
+    window.location.href = "checkout.html";
+  });
 
   loadCart();
 </script>
