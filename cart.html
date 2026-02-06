@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shopping Cart</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .cart-container {
+      max-width: 800px;
+      margin: 40px auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background-color: #b02a37;
+    }
+
+    .total {
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .empty {
+      text-align: center;
+      font-size: 18px;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo">ModernWeb</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Our Products</a></li>
+        <li><a href="cart.html" class="active">Cart</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div class="cart-container">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <div class="total" id="cartTotal"></div>
+</div>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function loadCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cartItemsDiv = document.getElementById("cartItems");
+    const cartTotalDiv = document.getElementById("cartTotal");
+
+    cartItemsDiv.innerHTML = "";
+    let total = 0;
+
+    if (cart.length === 0) {
+      cartItemsDiv.innerHTML = "<div class='empty'>Your cart is empty</div>";
+      cartTotalDiv.innerHTML = "";
+      return;
+    }
+
+    cart.forEach((item, index) => {
+      total += item.price;
+
+      cartItemsDiv.innerHTML += `
+        <div class="cart-item">
+          <div>
+            <h4>${item.name}</h4>
+            <p>₹${item.price.toLocaleString()}</p>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">
+            Remove
+          </button>
+        </div>
+      `;
+    });
+
+    cartTotalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
+
+    window.dataLayer.push({
+      event: "view_cart",
+      cart_value: total,
+      currency: "INR"
+    });
+  }
+
+  function removeItem(index) {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const removedItem = cart[index];
+
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    window.dataLayer.push({
+      event: "remove_from_cart",
+      product_name: removedItem.name,
+      product_price: removedItem.price,
+      currency: "INR"
+    });
+
+    loadCart();
+  }
+
+  loadCart();
+</script>
+
+</body>
+</html>
