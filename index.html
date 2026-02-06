@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -15,38 +16,6 @@
   <title>Modern Web Design | Home</title>
 
   <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-  <!-- Adobe digitalData -->
-  <script>
-    window.digitalData = {
-      page: {
-        pageInfo: {
-          pageName: "Home",
-          siteSection: "Homepage",
-          language: "en",
-          pageURL: window.location.href,
-          pageTitle: document.title
-        }
-      },
-      user: {
-        isLoggedIn: false
-      },
-      event: []
-    };
-  </script>
-
-  <!-- PAGE LOAD -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "page_load",
-      page_name: "Home",
-      page_url: window.location.href,
-      page_title: document.title,
-      site_section: "Homepage"
-    });
-  </script>
 
   <style>
     .login-modal {
@@ -58,27 +27,37 @@
       justify-content:center;
       align-items:center;
     }
+
     .login-box {
       background:#fff;
       padding:20px;
       width:300px;
       border-radius:6px;
     }
+
     .login-box input {
       width:100%;
       margin:8px 0;
       padding:8px;
     }
+
     .login-box button {
       width:100%;
       padding:8px;
+      background:#007bff;
+      color:#fff;
+      border:none;
+      border-radius:4px;
+      cursor:pointer;
     }
+
     .error {
       color:red;
       display:none;
       font-size:14px;
     }
   </style>
+
 </head>
 
 <body>
@@ -94,9 +73,8 @@
       <nav>
         <ul>
           <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="products.html">Our Products</a></li>
+          <li><a href="cart.html">Cart</a></li>
           <li><a href="#" id="signInBtn">Sign In</a></li>
           <li><a href="#" id="signOutBtn" style="display:none;">Sign Out</a></li>
         </ul>
@@ -108,15 +86,8 @@
     <div class="container">
       <h1>Welcome to Modern Web Design</h1>
       <p>Creating beautiful, responsive websites for the modern world.</p>
-      <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
     </div>
   </section>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2023 Modern Web Design</p>
-    </div>
-  </footer>
 
   <!-- LOGIN MODAL -->
   <div class="login-modal" id="loginModal">
@@ -129,111 +100,91 @@
     </div>
   </div>
 
-  <!-- CTA CLICK -->
-  <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-      e.preventDefault();
+<script>
 
-      window.dataLayer.push({
-        event: "cta_click",
-        cta_name: "explore_services",
-        page_name: "Home",
-        page_url: window.location.href
-      });
+window.dataLayer = window.dataLayer || [];
 
-      setTimeout(() => {
-        window.location.href = this.href;
-      }, 300);
-    });
-  </script>
+/* PAGE LOAD EVENT */
+window.dataLayer.push({
+  event: "page_load",
+  page_name: "Home",
+  page_url: window.location.href
+});
 
-  <!-- AUTH FLOW -->
-  <script>
-    const signInBtn = document.getElementById("signInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
-    const loginModal = document.getElementById("loginModal");
+/* LOGIN LOGIC */
+const signInBtn = document.getElementById("signInBtn");
+const signOutBtn = document.getElementById("signOutBtn");
+const loginModal = document.getElementById("loginModal");
 
-    const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
 
-    if (user) {
-      signInBtn.style.display = "none";
-      signOutBtn.style.display = "inline";
-      digitalData.user.isLoggedIn = true;
+if (user) {
+  signInBtn.style.display = "none";
+  signOutBtn.style.display = "inline";
+}
 
-      window.dataLayer.push({
-        event: "user_session_active",
-        userId: "U12345",
-        userType: "registered"
-      });
-    }
+/* LOGIN INITIATED */
+signInBtn.addEventListener("click", function(e){
+  e.preventDefault();
 
-    /* LOGIN INITIATED */
-    signInBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+  loginModal.style.display = "flex";
 
-      window.dataLayer.push({
-        event: "login_initiated",
-        page_name: "Home",
-        page_url: window.location.href
-      });
+  window.dataLayer.push({
+    event: "login_initiated"
+  });
+});
 
-      loginModal.style.display = "flex";
-    });
+/* LOGIN SUBMIT */
+document.getElementById("loginSubmit").addEventListener("click", function(){
 
-    /* LOGIN SUBMIT */
-    document.getElementById("loginSubmit").addEventListener("click", () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-      if (email === "user@test.com" && password === "123456") {
-        localStorage.setItem("user", JSON.stringify({ userId: "U12345", userType: "registered" }));
-        digitalData.user.isLoggedIn = true;
+  if (email === "user@test.com" && password === "123456") {
 
-        window.dataLayer.push({
-          event: "login_success",
-          login_method: "email",
-          userId: "U12345",
-          userType: "registered",
-          page_name: "Home",
-          page_url: window.location.href
-        });
+    localStorage.setItem("user", JSON.stringify({
+      userId: "U12345",
+      userType: "registered"
+    }));
 
-        loginModal.style.display = "none";
-        signInBtn.style.display = "none";
-        signOutBtn.style.display = "inline";
-      } else {
-        document.getElementById("loginError").style.display = "block";
+    loginModal.style.display = "none";
+    signInBtn.style.display = "none";
+    signOutBtn.style.display = "inline";
 
-        window.dataLayer.push({
-          event: "login_failed",
-          userId: null,
-          userType: "guest",
-          failure_reason: "invalid_credentials",
-          page_name: "Home",
-          page_url: window.location.href
-        });
-      }
+    window.dataLayer.push({
+      event: "login_success",
+      login_method: "email",
+      userId: "U12345",
+      userType: "registered"
     });
 
-    /* LOGOUT */
-    signOutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+  } else {
 
-      localStorage.removeItem("user");
-      digitalData.user.isLoggedIn = false;
+    document.getElementById("loginError").style.display = "block";
 
-      window.dataLayer.push({
-        event: "logout",
-        userId: "U12345",
-        userType: "registered",
-        page_name: "Home",
-        page_url: window.location.href
-      });
-
-      signInBtn.style.display = "inline";
-      signOutBtn.style.display = "none";
+    window.dataLayer.push({
+      event: "login_failed",
+      failure_reason: "invalid_credentials"
     });
-  </script>
+  }
+
+});
+
+/* LOGOUT */
+signOutBtn.addEventListener("click", function(e){
+  e.preventDefault();
+
+  localStorage.removeItem("user");
+
+  signInBtn.style.display = "inline";
+  signOutBtn.style.display = "none";
+
+  window.dataLayer.push({
+    event: "logout"
+  });
+});
+
+</script>
 
 </body>
 </html>
