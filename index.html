@@ -188,10 +188,10 @@ document.getElementById("loginSubmit").addEventListener("click", function(){
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
 
-  if (email === "user@test.com" && password === "123456") {
+  if (email !="") {
 
     localStorage.setItem("user", JSON.stringify({
-      userId: "Uxypyty==",
+      userId: btoa(email),
       userType: "registered"
     }));
 
@@ -235,3 +235,4 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
