@@ -78,6 +78,28 @@
       display:none;
       font-size:14px;
     }
+
+    /* PRODUCT SECTION */
+    .products {
+      padding:40px 0;
+      text-align:center;
+    }
+    .product-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+      gap:20px;
+      margin-top:20px;
+    }
+    .product-card {
+      border:1px solid #ddd;
+      padding:15px;
+      border-radius:6px;
+    }
+    .product-card button {
+      margin-top:10px;
+      padding:8px 12px;
+      cursor:pointer;
+    }
   </style>
 </head>
 
@@ -112,23 +134,102 @@
     </div>
   </section>
 
+  <!-- PRODUCTS SECTION -->
+  <section class="products">
+    <div class="container">
+      <h2>Our Products</h2>
+      <div class="product-grid">
+
+        <!-- 10 PRODUCTS -->
+        <div class="product-card" data-id="P001" data-name="Starter Website" data-price="499">
+          <h4>Starter Website</h4>
+          <p>$499</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P002" data-name="Business Website" data-price="999">
+          <h4>Business Website</h4>
+          <p>$999</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P003" data-name="Ecommerce Website" data-price="1499">
+          <h4>Ecommerce Website</h4>
+          <p>$1499</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P004" data-name="Portfolio Website" data-price="699">
+          <h4>Portfolio Website</h4>
+          <p>$699</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P005" data-name="SEO Package" data-price="299">
+          <h4>SEO Package</h4>
+          <p>$299</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P006" data-name="Social Media Setup" data-price="199">
+          <h4>Social Media Setup</h4>
+          <p>$199</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P007" data-name="Logo Design" data-price="149">
+          <h4>Logo Design</h4>
+          <p>$149</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P008" data-name="Website Maintenance" data-price="99">
+          <h4>Website Maintenance</h4>
+          <p>$99</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P009" data-name="Landing Page Design" data-price="399">
+          <h4>Landing Page Design</h4>
+          <p>$399</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+        <div class="product-card" data-id="P010" data-name="Custom Web App" data-price="1999">
+          <h4>Custom Web App</h4>
+          <p>$1999</p>
+          <button class="viewProduct">View Product</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <footer>
     <div class="container">
       <p>&copy; 2023 Modern Web Design</p>
     </div>
   </footer>
 
-  <!-- LOGIN MODAL -->
-  <div class="login-modal" id="loginModal">
-    <div class="login-box">
-      <h3>Sign In</h3>
-      <input type="email" id="email" placeholder="Email" />
-      <input type="password" id="password" placeholder="Password" />
-      <button id="loginSubmit">Login</button>
-      <p class="error" id="loginError">Invalid credentials</p>
-    </div>
-  </div>
+  <!-- PRODUCT CLICK TRACKING -->
+  <script>
+    document.querySelectorAll(".viewProduct").forEach(button => {
+      button.addEventListener("click", function() {
+        const product = this.parentElement;
 
+        window.dataLayer.push({
+          event: "product_view",
+          product_id: product.getAttribute("data-id"),
+          product_name: product.getAttribute("data-name"),
+          product_price: product.getAttribute("data-price"),
+          page_name: "Home",
+          page_url: window.location.href
+        });
+      });
+    });
+  </script>
+
+  <!-- EXISTING SCRIPTS BELOW (UNCHANGED) -->
   <!-- CTA CLICK -->
   <script>
     document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
@@ -167,7 +268,6 @@
       });
     }
 
-    /* LOGIN INITIATED */
     signInBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
@@ -180,7 +280,6 @@
       loginModal.style.display = "flex";
     });
 
-    /* LOGIN SUBMIT */
     document.getElementById("loginSubmit").addEventListener("click", () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -215,7 +314,6 @@
       }
     });
 
-    /* LOGOUT */
     signOutBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
