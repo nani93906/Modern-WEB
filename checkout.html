@@ -14,6 +14,20 @@
       background: #fff;
     }
 
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      text-align: right;
+      margin-top: 20px;
+    }
+
     .place-order-btn {
       width: 100%;
       padding: 15px;
@@ -31,18 +45,31 @@
       background-color: #0056b3;
     }
 
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
+    .form-group {
+      margin-bottom: 15px;
     }
 
-    .total {
-      font-size: 20px;
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .message {
+      margin-top: 15px;
       font-weight: bold;
-      text-align: right;
-      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
     }
   </style>
 </head>
@@ -62,12 +89,45 @@
 </header>
 
 <div class="checkout-container">
+
+  <h2>Shipping Address</h2>
+
+  <div class="form-group">
+    <input type="text" id="fullName" placeholder="Full Name">
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="mobile" placeholder="Mobile Number">
+  </div>
+
+  <div class="form-group">
+    <textarea id="address" placeholder="Full Address"></textarea>
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="city" placeholder="City">
+  </div>
+
+  <div class="form-group">
+    <input type="text" id="pincode" placeholder="Pincode">
+  </div>
+
   <h2>Order Summary</h2>
   <div id="orderSummary"></div>
   <div class="total" id="orderTotal"></div>
+
   <button id="placeOrderBtn" class="place-order-btn">
     Place Order
   </button>
+
+  <div id="successMessage" class="message success">
+    Order placed successfully!
+  </div>
+
+  <div id="errorMessage" class="message error">
+    Order failed. Please fill all shipping details.
+  </div>
+
 </div>
 
 <script>
@@ -100,6 +160,32 @@
 
   document.getElementById("placeOrderBtn").addEventListener("click", function(){
 
+    const fullName = document.getElementById("fullName").value.trim();
+    const mobile = document.getElementById("mobile").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const city = document.getElementById("city").value.trim();
+    const pincode = document.getElementById("pincode").value.trim();
+
+    const successMsg = document.getElementById("successMessage");
+    const errorMsg = document.getElementById("errorMessage");
+
+    successMsg.style.display = "none";
+    errorMsg.style.display = "none";
+
+    if (!fullName || !mobile || !address || !city || !pincode) {
+
+      errorMsg.style.display = "block";
+
+      window.dataLayer.push({
+        event: "order_failed",
+        reason: "shipping_details_missing"
+      });
+
+      return;
+    }
+
+    successMsg.style.display = "block";
+
     window.dataLayer.push({
       event: "purchase",
       purchase_value: total,
@@ -108,8 +194,10 @@
 
     localStorage.removeItem("cart");
 
-    alert("Order placed successfully!");
-    window.location.href = "index.html";
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+
   });
 </script>
 
