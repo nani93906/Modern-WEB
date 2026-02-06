@@ -5,6 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details</title>
   <link rel="stylesheet" href="styles.css" />
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+  </script>
+
+  <style>
+    .pdp-container {
+      max-width: 600px;
+      margin: 50px auto;
+      border: 1px solid #ddd;
+      padding: 30px;
+      border-radius: 8px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 8px 15px;
+      background: #28a745;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 
 <body>
@@ -22,19 +49,26 @@
   </div>
 </header>
 
-<section class="container">
-  <h1 id="productName"></h1>
+<div class="pdp-container">
+  <h2 id="productName"></h2>
   <p id="productDescription"></p>
   <h3 id="productPrice"></h3>
-  <button id="addToCartBtn" class="btn">Add to Cart</button>
-</section>
+
+  <button class="btn" id="addToCartBtn">Add to Cart</button>
+</div>
 
 <script>
-
   const products = {
-    1: { name: "Laptop", description: "High performance laptop", price: 800 },
-    2: { name: "Smartphone", description: "Latest generation smartphone", price: 600 },
-    3: { name: "Headphones", description: "Noise cancelling headphones", price: 150 }
+    1: {
+      name: "Laptop",
+      description: "High performance laptop with powerful processor",
+      price: 800
+    },
+    2: {
+      name: "Smartphone",
+      description: "Latest generation smartphone with advanced features",
+      price: 600
+    }
   };
 
   const params = new URLSearchParams(window.location.search);
@@ -42,32 +76,36 @@
   const product = products[productId];
 
   if (product) {
+
     document.getElementById("productName").innerText = product.name;
     document.getElementById("productDescription").innerText = product.description;
     document.getElementById("productPrice").innerText = "$" + product.price;
 
-    window.dataLayer = window.dataLayer || [];
+    // PDP Page Load Event
     window.dataLayer.push({
-      event: "product_view",
-      product_id: productId,
-      product_name: product.name,
-      product_price: product.price,
-      page_type: "PDP"
-    });
-  }
-
-  document.getElementById("addToCartBtn").addEventListener("click", function () {
-
-    window.dataLayer.push({
-      event: "add_to_cart",
+      event: "page_load",
+      page_name: "Product Details",
+      page_type: "PDP",
       product_id: productId,
       product_name: product.name,
       product_price: product.price
     });
 
-    alert("Product added to cart!");
-  });
+    // Add To Cart Event
+    document.getElementById("addToCartBtn").addEventListener("click", function () {
 
+      window.dataLayer.push({
+        event: "add_to_cart",
+        product_id: productId,
+        product_name: product.name,
+        product_price: product.price,
+        page_type: "PDP"
+      });
+
+      alert("Product added to cart!");
+    });
+
+  }
 </script>
 
 </body>
