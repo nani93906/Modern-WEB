@@ -12,228 +12,184 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Modern Web Design | Home</title>
-
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-  <!-- Adobe digitalData -->
-  <script>
-    window.digitalData = {
-      page: {
-        pageInfo: {
-          pageName: "Home",
-          siteSection: "Homepage",
-          language: "en",
-          pageURL: window.location.href,
-          pageTitle: document.title
-        }
-      },
-      user: {
-        isLoggedIn: false
-      },
-      event: []
-    };
-  </script>
-
-  <!-- PAGE LOAD -->
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "page_load",
-      page_name: "Home",
-      page_url: window.location.href,
-      page_title: document.title,
-      site_section: "Homepage"
-    });
-  </script>
+  <title>Modern Web Store</title>
 
   <style>
-    .login-modal {
-      display:none;
-      position:fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background:rgba(0,0,0,0.6);
-      justify-content:center;
-      align-items:center;
-    }
-    .login-box {
-      background:#fff;
-      padding:20px;
-      width:300px;
-      border-radius:6px;
-    }
-    .login-box input {
-      width:100%;
-      margin:8px 0;
-      padding:8px;
-    }
-    .login-box button {
-      width:100%;
-      padding:8px;
-    }
-    .error {
-      color:red;
-      display:none;
-      font-size:14px;
-    }
+    body { margin:0; font-family:Segoe UI; background:#f8fafc; }
+    nav { background:#fff; padding:15px 30px; display:flex; justify-content:space-between; border-bottom:1px solid #ddd;}
+    .logo { font-size:22px; font-weight:bold; color:#10b981; cursor:pointer;}
+    .nav-links span { margin-left:20px; cursor:pointer;}
+    .page { display:none; padding:40px;}
+    .active { display:block;}
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:20px;}
+    .card { background:#fff; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.05);}
+    .btn { background:#10b981; color:#fff; padding:10px; border:none; border-radius:6px; cursor:pointer; width:100%;}
+    .btn-fail { background:#ef4444; }
   </style>
 </head>
 
 <body>
 
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
-
-  <header>
-    <div class="container">
-      <div class="logo">ModernWeb</div>
-      <nav>
-        <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="#" id="signInBtn">Sign In</a></li>
-          <li><a href="#" id="signOutBtn" style="display:none;">Sign Out</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <section class="hero">
-    <div class="container">
-      <h1>Welcome to Modern Web Design</h1>
-      <p>Creating beautiful, responsive websites for the modern world.</p>
-      <a href="services.html" class="btn" id="exploreServicesBtn">Explore Our Services</a>
-    </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p>&copy; 2023 Modern Web Design</p>
-    </div>
-  </footer>
-
-  <!-- LOGIN MODAL -->
-  <div class="login-modal" id="loginModal">
-    <div class="login-box">
-      <h3>Sign In</h3>
-      <input type="email" id="email" placeholder="Email" />
-      <input type="password" id="password" placeholder="Password" />
-      <button id="loginSubmit">Login</button>
-      <p class="error" id="loginError">Invalid credentials</p>
-    </div>
+<nav>
+  <div class="logo" onclick="route('home')">ModernWeb</div>
+  <div class="nav-links">
+    <span onclick="route('home')">Home</span>
+    <span onclick="route('cart')">Cart (<span id="cartCount">0</span>)</span>
   </div>
+</nav>
 
-  <!-- CTA CLICK -->
-  <script>
-    document.getElementById("exploreServicesBtn").addEventListener("click", function (e) {
-      e.preventDefault();
+<!-- PLP -->
+<div id="home" class="page active">
+  <h2>Featured Products</h2>
+  <div class="grid" id="productGrid"></div>
+</div>
 
-      window.dataLayer.push({
-        event: "cta_click",
-        cta_name: "explore_services",
-        page_name: "Home",
-        page_url: window.location.href
-      });
+<!-- PDP -->
+<div id="pdp" class="page">
+  <div id="pdpContent" class="card"></div>
+</div>
 
-      setTimeout(() => {
-        window.location.href = this.href;
-      }, 300);
-    });
-  </script>
+<!-- CART -->
+<div id="cart" class="page">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <br>
+  <button class="btn" onclick="route('checkout')">Proceed to Checkout</button>
+</div>
 
-  <!-- AUTH FLOW -->
-  <script>
-    const signInBtn = document.getElementById("signInBtn");
-    const signOutBtn = document.getElementById("signOutBtn");
-    const loginModal = document.getElementById("loginModal");
+<!-- CHECKOUT -->
+<div id="checkout" class="page">
+  <h2>Checkout</h2>
+  <input type="text" placeholder="Full Name"><br><br>
+  <input type="email" placeholder="Email"><br><br>
+  <button class="btn" onclick="route('payment')">Proceed to Payment</button>
+</div>
 
-    const user = JSON.parse(localStorage.getItem("user"));
+<!-- PAYMENT -->
+<div id="payment" class="page">
+  <h2>Payment</h2>
+  <button class="btn" onclick="paymentSuccess()">Payment Success</button>
+  <br><br>
+  <button class="btn btn-fail" onclick="paymentFailed()">Payment Failed</button>
+</div>
 
-    if (user) {
-      signInBtn.style.display = "none";
-      signOutBtn.style.display = "inline";
-      digitalData.user.isLoggedIn = true;
+<!-- SUCCESS -->
+<div id="success" class="page">
+  <h2>Order Successful 🎉</h2>
+  <p id="orderId"></p>
+</div>
 
-      window.dataLayer.push({
-        event: "user_session_active",
-        userId: "U12345",
-        userType: "registered"
-      });
-    }
+<!-- FAILED -->
+<div id="failed" class="page">
+  <h2 style="color:red;">Payment Failed ❌</h2>
+</div>
 
-    /* LOGIN INITIATED */
-    signInBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+<script>
+window.dataLayer = window.dataLayer || [];
 
-      window.dataLayer.push({
-        event: "login_initiated",
-        page_name: "Home",
-        page_url: window.location.href
-      });
+const products = [
+ {id:"P1", name:"Nike Shoes", price:2700},
+ {id:"P2", name:"Adidas Runner", price:4200},
+ {id:"P3", name:"H&M Blazer", price:3500},
+ {id:"P4", name:"Mango Top", price:1800}
+];
 
-      loginModal.style.display = "flex";
-    });
+let cart = [];
+let currentProduct = null;
 
-    /* LOGIN SUBMIT */
-    document.getElementById("loginSubmit").addEventListener("click", () => {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+/* ROUTING */
+function route(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.getElementById(page).classList.add('active');
 
-      if (email === "user@test.com" && password === "123456") {
-        localStorage.setItem("user", JSON.stringify({ userId: "U12345", userType: "registered" }));
-        digitalData.user.isLoggedIn = true;
+ window.dataLayer.push({
+   event:"page_view",
+   page_name:page
+ });
+}
 
-        window.dataLayer.push({
-          event: "login_success",
-          login_method: "email",
-          userId: "U12345",
-          userType: "registered",
-          page_name: "Home",
-          page_url: window.location.href
-        });
+/* RENDER PLP */
+function renderProducts(){
+ document.getElementById('productGrid').innerHTML =
+ products.map(p=>`
+   <div class="card" onclick="viewPDP('${p.id}')">
+     <h4>${p.name}</h4>
+     <p>₹${p.price}</p>
+   </div>
+ `).join('');
+}
 
-        loginModal.style.display = "none";
-        signInBtn.style.display = "none";
-        signOutBtn.style.display = "inline";
-      } else {
-        document.getElementById("loginError").style.display = "block";
+/* PDP */
+function viewPDP(id){
+ currentProduct = products.find(p=>p.id===id);
+ route('pdp');
 
-        window.dataLayer.push({
-          event: "login_failed",
-          userId: null,
-          userType: "guest",
-          failure_reason: "invalid_credentials",
-          page_name: "Home",
-          page_url: window.location.href
-        });
-      }
-    });
+ document.getElementById('pdpContent').innerHTML = `
+   <h2>${currentProduct.name}</h2>
+   <p>Price: ₹${currentProduct.price}</p>
+   <button class="btn" onclick="addToCart()">Add to Cart</button>
+ `;
 
-    /* LOGOUT */
-    signOutBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+ window.dataLayer.push({
+   event:"view_item",
+   product_name:currentProduct.name,
+   product_price:currentProduct.price
+ });
+}
 
-      localStorage.removeItem("user");
-      digitalData.user.isLoggedIn = false;
+/* ADD TO CART */
+function addToCart(){
+ cart.push(currentProduct);
+ updateCartUI();
 
-      window.dataLayer.push({
-        event: "logout",
-        userId: "U12345",
-        userType: "registered",
-        page_name: "Home",
-        page_url: window.location.href
-      });
+ window.dataLayer.push({
+   event:"add_to_cart",
+   product_name:currentProduct.name,
+   product_price:currentProduct.price
+ });
 
-      signInBtn.style.display = "inline";
-      signOutBtn.style.display = "none";
-    });
-  </script>
+ route('cart');
+}
+
+/* CART UI */
+function updateCartUI(){
+ document.getElementById('cartCount').innerText = cart.length;
+
+ document.getElementById('cartItems').innerHTML =
+ cart.map(p=>`
+   <div class="card">
+     ${p.name} - ₹${p.price}
+   </div>
+ `).join('');
+}
+
+/* PAYMENT SUCCESS */
+function paymentSuccess(){
+ const orderId = "ORD-"+Math.floor(Math.random()*100000);
+ document.getElementById('orderId').innerText="Order ID: "+orderId;
+ route('success');
+
+ window.dataLayer.push({
+   event:"purchase",
+   order_id:orderId,
+   value:cart.reduce((sum,p)=>sum+p.price,0)
+ });
+
+ cart=[];
+ updateCartUI();
+}
+
+/* PAYMENT FAILED */
+function paymentFailed(){
+ route('failed');
+
+ window.dataLayer.push({
+   event:"payment_failed"
+ });
+}
+
+renderProducts();
+</script>
 
 </body>
 </html>
