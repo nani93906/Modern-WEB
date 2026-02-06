@@ -10,10 +10,8 @@
 
     const existingUser = JSON.parse(localStorage.getItem("user"));
 
-    window.dataLayer.push({
-      page_title: document.title,
+    window.dataLayer.push({ 
       page_URL: window.location.href,
-      page_path: window.location.pathname,
       page_Name: "homepage",
       user_type: existingUser ? existingUser.userType : "guest"
     });
@@ -238,3 +236,4 @@ signOutBtn.addEventListener("click", function(e){
 
 </body>
 </html>
+
