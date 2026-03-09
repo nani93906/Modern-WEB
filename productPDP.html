@@ -16,7 +16,6 @@
       padding:20px;
       border-radius:8px;
     }
-
     #addToCartBtn {
       width: 100%;
       padding: 15px;
@@ -30,7 +29,6 @@
       margin-top: 20px;
       transition: 0.3s ease;
     }
-
     #addToCartBtn:hover {
       background-color: #e65c00;
     }
@@ -64,7 +62,6 @@
 </div>
 
 <script>
-
 const products = {
   1:{name:"Laptop",price:80000,old:95000,color:"Silver",brand:"Dell",warranty:"1 Year",stock:"In Stock"},
   2:{name:"Smartphone",price:45000,old:52000,color:"Black",brand:"Samsung",warranty:"1 Year",stock:"In Stock"},
@@ -84,8 +81,8 @@ const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
 if(products[id]){
-
   const p = products[id];
+  const discountVal = (p.old - p.price) > 0 ? (p.old - p.price) : 0;
 
   document.getElementById("productName").innerText = p.name;
   document.getElementById("brand").innerText = "Brand: " + p.brand;
@@ -95,72 +92,65 @@ if(products[id]){
   document.getElementById("price").innerText = "₹" + p.price.toLocaleString();
   document.getElementById("oldPrice").innerText = "₹" + p.old.toLocaleString();
 
+  // Mapping your specific keys to the product object
+  const ecommerceItem = {
+    affiliation: "ModernWeb Store",
+    discount: discountVal,
+    google_business_vertical: "retail",
+    index: 0,
+    item_brand: p.brand,
+    item_category: "Electronics",
+    item_category2: "Hardware", 
+    item_category3: null,
+    item_category4: null,
+    item_category5: null,
+    item_id: "SKU_" + id,
+    item_list_id: "pdp_related",
+    item_list_name: "Product Detail Page",
+    item_name: p.name,
+    item_variant: p.color,
+    location_id: null,
+    price: p.price,
+    quantity: 1
+  };
 
   /* =========================
-     GA4 view_item EVENT
+      GA4 view_item EVENT
   ========================== */
-
+  window.dataLayer.push({ ecommerce: null }); 
   window.dataLayer.push({
     event: "view_item",
     ecommerce: {
       currency: "INR",
       value: p.price,
-      items: [{
-        item_id: id.toString(),
-        item_name: p.name,
-        price: p.price,
-        item_brand: p.brand,
-        item_category: "Electronics",
-        item_variant: p.color,
-        quantity: 1
-      }]
+      items: [ecommerceItem]
     }
   });
 
-
   /* =========================
-     ADD TO CART EVENT
+      ADD TO CART EVENT
   ========================== */
-
   document.getElementById("addToCartBtn").addEventListener("click", function(){
-
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    cart.push({
-      id: id,
-      name: p.name,
-      price: p.price
-    });
-
+    cart.push({ id: id, name: p.name, price: p.price });
     localStorage.setItem("cart", JSON.stringify(cart));
 
+    window.dataLayer.push({ ecommerce: null });
     window.dataLayer.push({
       event: "add_to_cart",
       ecommerce: {
         currency: "INR",
         value: p.price,
-        items: [{
-          item_id: id.toString(),
-          item_name: p.name,
-          price: p.price,
-          item_brand: p.brand,
-          item_category: "Electronics",
-          item_variant: p.color,
-          quantity: 1
-        }]
+        items: [ecommerceItem]
       }
     });
 
     alert("Product added to cart");
-
   });
 
 } else {
-
   document.body.innerHTML="<h2 style='text-align:center'>Product Not Found</h2>";
-
 }
-
 </script>
 
 </body>
