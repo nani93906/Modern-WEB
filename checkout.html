@@ -111,6 +111,47 @@
 </div>
 
 <script>
+// Metadata to populate the specific fields from your previous requirements
+const productMetadata = {
+  1:{brand:"Dell", color:"Silver", old:95000, price:80000},
+  2:{brand:"Samsung", color:"Black", old:52000, price:45000},
+  3:{brand:"Sony", color:"Blue", old:5000, price:3500},
+  4:{brand:"Boat", color:"Black", old:12000, price:9000},
+  5:{brand:"Logitech", color:"Red", old:2500, price:1500},
+  6:{brand:"HP", color:"White", old:3500, price:2200},
+  7:{brand:"Lenovo", color:"Grey", old:38000, price:30000},
+  8:{brand:"LG", color:"Black", old:15000, price:12000},
+  9:{brand:"JBL", color:"Brown", old:7500, price:5000},
+  10:{brand:"Canon", color:"Black", old:65000, price:55000},
+  11:{brand:"Mi", color:"White", old:2000, price:1200},
+  12:{brand:"Seagate", color:"Black", old:6500, price:4800}
+};
+
+function getEcommerceItem(item, index) {
+  const meta = productMetadata[item.id] || {};
+  const discountVal = (meta.old - meta.price) > 0 ? (meta.old - meta.price) : 0;
+  
+  return {
+    affiliation: "ModernWeb Store",
+    discount: discountVal,
+    google_business_vertical: "retail",
+    index: index,
+    item_brand: meta.brand || "",
+    item_category: "Electronics",
+    item_category2: "Hardware",
+    item_category3: null,
+    item_category4: null,
+    item_category5: null,
+    item_id: "SKU_" + item.id,
+    item_list_id: "checkout_view",
+    item_list_name: "Checkout Page",
+    item_name: item.name,
+    item_variant: meta.color || "",
+    location_id: null,
+    price: item.price,
+    quantity: 1
+  };
+}
 
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 const summaryDiv = document.getElementById("orderSummary");
@@ -119,16 +160,9 @@ const totalDiv = document.getElementById("orderTotal");
 let total = 0;
 let itemsArray = [];
 
-cart.forEach(item => {
-
+cart.forEach((item, index) => {
   total += item.price;
-
-  itemsArray.push({
-    item_id: item.id.toString(),
-    item_name: item.name,
-    price: item.price,
-    quantity: 1
-  });
+  itemsArray.push(getEcommerceItem(item, index));
 
   summaryDiv.innerHTML += `
     <div class="summary-item">
@@ -141,6 +175,7 @@ cart.forEach(item => {
 totalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
 /* GA4 begin_checkout */
+window.dataLayer.push({ ecommerce: null }); 
 window.dataLayer.push({
   event: "begin_checkout",
   ecommerce: {
@@ -165,22 +200,19 @@ document.getElementById("placeOrderBtn").addEventListener("click", function(){
   errorMsg.style.display = "none";
 
   if (!fullName || !mobile || !address || !city || !pincode) {
-
     errorMsg.style.display = "block";
-
     window.dataLayer.push({
       event: "checkout_error",
       error_type: "missing_shipping_details"
     });
-
     return;
   }
 
   successMsg.style.display = "block";
-
   const transactionId = "T" + new Date().getTime();
 
   /* GA4 purchase */
+  window.dataLayer.push({ ecommerce: null }); 
   window.dataLayer.push({
     event: "purchase",
     ecommerce: {
