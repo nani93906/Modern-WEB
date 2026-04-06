@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Checkout</title>
   <link rel="stylesheet" href="styles.css">
+
   <script>
     window.dataLayer = window.dataLayer || [];
+
+    const existingUser = JSON.parse(localStorage.getItem("user"));
+
+    window.dataLayer.push({ 
+      page_URL: window.location.href,
+      page_Name: "Checkout Page",
+      user_type: existingUser ? existingUser.userType : "guest"
+    });
+  </script>
+
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8C6RVQM');
   </script>
 
   <style>
@@ -69,6 +88,11 @@
 </head>
 <body>
 
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+
 <header>
   <div class="container">
     <div class="logo">ModernWeb</div>
@@ -111,7 +135,7 @@
 </div>
 
 <script>
-// Metadata to populate the specific fields from your previous requirements
+// Metadata to populate the specific fields
 const productMetadata = {
   1:{brand:"Dell", color:"Silver", old:95000, price:80000},
   2:{brand:"Samsung", color:"Black", old:52000, price:45000},
@@ -153,14 +177,14 @@ function getEcommerceItem(item, index) {
   };
 }
 
-const cart = JSON.parse(localStorage.getItem("cart")) || [];
+const cartData = JSON.parse(localStorage.getItem("cart")) || [];
 const summaryDiv = document.getElementById("orderSummary");
 const totalDiv = document.getElementById("orderTotal");
 
 let total = 0;
 let itemsArray = [];
 
-cart.forEach((item, index) => {
+cartData.forEach((item, index) => {
   total += item.price;
   itemsArray.push(getEcommerceItem(item, index));
 
@@ -174,7 +198,7 @@ cart.forEach((item, index) => {
 
 totalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
-/* GA4 begin_checkout */
+/* GA4 begin_checkout (Triggered on page load of Checkout) */
 window.dataLayer.push({ ecommerce: null }); 
 window.dataLayer.push({
   event: "begin_checkout",
