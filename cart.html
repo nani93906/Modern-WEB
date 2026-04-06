@@ -86,9 +86,23 @@
 </div>
 
 <script>
+// Metadata mapping to ensure GA4 data matches the PDP page
+const productMetadata = {
+  1:{brand:"Dell", color:"Silver"},
+  2:{brand:"Samsung", color:"Black"},
+  3:{brand:"Sony", color:"Blue"},
+  4:{brand:"Boat", color:"Black"},
+  5:{brand:"Logitech", color:"Red"},
+  6:{brand:"HP", color:"White"},
+  7:{brand:"Lenovo", color:"Grey"},
+  8:{brand:"LG", color:"Black"},
+  9:{brand:"JBL", color:"Brown"},
+  10:{brand:"Canon", color:"Black"},
+  11:{brand:"Mi", color:"White"},
+  12:{brand:"Seagate", color:"Black"}
+};
 
 function loadCart() {
-
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const cartItemsDiv = document.getElementById("cartItems");
   const cartTotalDiv = document.getElementById("cartTotal");
@@ -108,12 +122,19 @@ function loadCart() {
   checkoutBtn.style.display = "block";
 
   cart.forEach((item, index) => {
-
     total += item.price;
+    const meta = productMetadata[item.id] || {};
 
+    // Building the item object to match your PDP structure
     itemsArray.push({
-      item_id: item.id.toString(),
+      item_id: "SKU_" + item.id,
       item_name: item.name,
+      affiliation: "ModernWeb Store",
+      index: index,
+      item_brand: meta.brand || "Unknown",
+      item_category: "Electronics",
+      item_category2: "Hardware",
+      item_variant: meta.color || "Default",
       price: item.price,
       quantity: 1
     });
@@ -133,7 +154,8 @@ function loadCart() {
 
   cartTotalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
-  /* GA4 view_cart */
+  /* GA4 view_cart Event */
+  window.dataLayer.push({ ecommerce: null }); 
   window.dataLayer.push({
     event: "view_cart",
     ecommerce: {
@@ -145,22 +167,27 @@ function loadCart() {
 }
 
 function removeItem(index) {
-
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const removedItem = cart[index];
+  const meta = productMetadata[removedItem.id] || {};
 
   cart.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  /* GA4 remove_from_cart */
+  /* GA4 remove_from_cart Event */
+  window.dataLayer.push({ ecommerce: null });
   window.dataLayer.push({
     event: "remove_from_cart",
     ecommerce: {
       currency: "INR",
       value: removedItem.price,
       items: [{
-        item_id: removedItem.id.toString(),
+        item_id: "SKU_" + removedItem.id,
         item_name: removedItem.name,
+        affiliation: "ModernWeb Store",
+        item_brand: meta.brand || "Unknown",
+        item_category: "Electronics",
+        item_variant: meta.color || "Default",
         price: removedItem.price,
         quantity: 1
       }]
@@ -175,7 +202,6 @@ document.getElementById("checkoutBtn").addEventListener("click", function() {
 });
 
 loadCart();
-
 </script>
 
 </body>
