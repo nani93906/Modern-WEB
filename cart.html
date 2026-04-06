@@ -16,7 +16,6 @@
       border-radius: 8px;
       background: #fff;
     }
-
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -24,7 +23,6 @@
       border-bottom: 1px solid #eee;
       padding: 15px 0;
     }
-
     .remove-btn {
       background-color: #dc3545;
       color: white;
@@ -33,7 +31,6 @@
       border-radius: 4px;
       cursor: pointer;
     }
-
     .checkout-btn {
       width: 100%;
       padding: 15px;
@@ -46,14 +43,12 @@
       cursor: pointer;
       margin-top: 20px;
     }
-
     .total {
       text-align: right;
       font-size: 20px;
       font-weight: bold;
       margin-top: 20px;
     }
-
     .empty {
       text-align: center;
       font-size: 18px;
@@ -86,21 +81,47 @@
 </div>
 
 <script>
-// Metadata mapping to ensure GA4 data matches the PDP page
+// Metadata to populate the specific fields from your screenshot
 const productMetadata = {
-  1:{brand:"Dell", color:"Silver"},
-  2:{brand:"Samsung", color:"Black"},
-  3:{brand:"Sony", color:"Blue"},
-  4:{brand:"Boat", color:"Black"},
-  5:{brand:"Logitech", color:"Red"},
-  6:{brand:"HP", color:"White"},
-  7:{brand:"Lenovo", color:"Grey"},
-  8:{brand:"LG", color:"Black"},
-  9:{brand:"JBL", color:"Brown"},
-  10:{brand:"Canon", color:"Black"},
-  11:{brand:"Mi", color:"White"},
-  12:{brand:"Seagate", color:"Black"}
+  1:{brand:"Dell", color:"Silver", old:95000, price:80000},
+  2:{brand:"Samsung", color:"Black", old:52000, price:45000},
+  3:{brand:"Sony", color:"Blue", old:5000, price:3500},
+  4:{brand:"Boat", color:"Black", old:12000, price:9000},
+  5:{brand:"Logitech", color:"Red", old:2500, price:1500},
+  6:{brand:"HP", color:"White", old:3500, price:2200},
+  7:{brand:"Lenovo", color:"Grey", old:38000, price:30000},
+  8:{brand:"LG", color:"Black", old:15000, price:12000},
+  9:{brand:"JBL", color:"Brown", old:7500, price:5000},
+  10:{brand:"Canon", color:"Black", old:65000, price:55000},
+  11:{brand:"Mi", color:"White", old:2000, price:1200},
+  12:{brand:"Seagate", color:"Black", old:65000, price:4800}
 };
+
+function getEcommerceItem(item, index) {
+  const meta = productMetadata[item.id] || {};
+  const discountVal = (meta.old - meta.price) > 0 ? (meta.old - meta.price) : 0;
+  
+  return {
+    affiliation: "ModernWeb Store",
+    discount: discountVal,
+    google_business_vertical: "retail",
+    index: index,
+    item_brand: meta.brand || "",
+    item_category: "Electronics",
+    item_category2: "Hardware",
+    item_category3: null,
+    item_category4: null,
+    item_category5: null,
+    item_id: "SKU_" + item.id,
+    item_list_id: "cart_view",
+    item_list_name: "Cart Page",
+    item_name: item.name,
+    item_variant: meta.color || "",
+    location_id: null,
+    price: item.price,
+    quantity: 1
+  };
+}
 
 function loadCart() {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -123,21 +144,7 @@ function loadCart() {
 
   cart.forEach((item, index) => {
     total += item.price;
-    const meta = productMetadata[item.id] || {};
-
-    // Building the item object to match your PDP structure
-    itemsArray.push({
-      item_id: "SKU_" + item.id,
-      item_name: item.name,
-      affiliation: "ModernWeb Store",
-      index: index,
-      item_brand: meta.brand || "Unknown",
-      item_category: "Electronics",
-      item_category2: "Hardware",
-      item_variant: meta.color || "Default",
-      price: item.price,
-      quantity: 1
-    });
+    itemsArray.push(getEcommerceItem(item, index));
 
     cartItemsDiv.innerHTML += `
       <div class="cart-item">
@@ -154,7 +161,7 @@ function loadCart() {
 
   cartTotalDiv.innerHTML = "Total: ₹" + total.toLocaleString();
 
-  /* GA4 view_cart Event */
+  /* GA4 view_cart */
   window.dataLayer.push({ ecommerce: null }); 
   window.dataLayer.push({
     event: "view_cart",
@@ -169,28 +176,18 @@ function loadCart() {
 function removeItem(index) {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
   const removedItem = cart[index];
-  const meta = productMetadata[removedItem.id] || {};
 
   cart.splice(index, 1);
   localStorage.setItem("cart", JSON.stringify(cart));
 
-  /* GA4 remove_from_cart Event */
+  /* GA4 remove_from_cart */
   window.dataLayer.push({ ecommerce: null });
   window.dataLayer.push({
     event: "remove_from_cart",
     ecommerce: {
       currency: "INR",
       value: removedItem.price,
-      items: [{
-        item_id: "SKU_" + removedItem.id,
-        item_name: removedItem.name,
-        affiliation: "ModernWeb Store",
-        item_brand: meta.brand || "Unknown",
-        item_category: "Electronics",
-        item_variant: meta.color || "Default",
-        price: removedItem.price,
-        quantity: 1
-      }]
+      items: [getEcommerceItem(removedItem, 0)]
     }
   });
 
