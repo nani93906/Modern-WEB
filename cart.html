@@ -223,7 +223,7 @@ function removeItem(index) {
   loadCart();
 }
 
-/* Updated Proceed to Checkout with GA4 Tracking */
+/* Updated Proceed to Checkout with Custom Event Tracking */
 document.getElementById("checkoutBtn").addEventListener("click", function(e) {
   e.preventDefault(); 
   
@@ -236,7 +236,7 @@ document.getElementById("checkoutBtn").addEventListener("click", function(e) {
 
   window.dataLayer.push({ ecommerce: null });
   window.dataLayer.push({
-    event: "begin_checkout",
+    event: "proceed_to_checkout",
     ecommerce: {
       currency: "INR",
       value: total,
