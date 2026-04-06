@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details</title>
   <link rel="stylesheet" href="styles.css">
 
   <script>
     window.dataLayer = window.dataLayer || [];
+
+    const existingUser = JSON.parse(localStorage.getItem("user"));
+
+    window.dataLayer.push({ 
+      page_URL: window.location.href,
+      page_Name: "Product Detail Page",
+      user_type: existingUser ? existingUser.userType : "guest"
+    });
+  </script>
+
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-T8C6RVQM');
   </script>
 
   <style>
@@ -35,6 +53,11 @@
   </style>
 </head>
 <body>
+
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-T8C6RVQM"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
 
 <header>
   <div class="container">
@@ -92,7 +115,6 @@ if(products[id]){
   document.getElementById("price").innerText = "₹" + p.price.toLocaleString();
   document.getElementById("oldPrice").innerText = "₹" + p.old.toLocaleString();
 
-  // Mapping your specific keys to the product object
   const ecommerceItem = {
     affiliation: "ModernWeb Store",
     discount: discountVal,
