@@ -16,6 +16,7 @@
       border-radius: 8px;
       background: #fff;
     }
+
     .cart-item {
       display: flex;
       justify-content: space-between;
@@ -23,6 +24,7 @@
       border-bottom: 1px solid #eee;
       padding: 15px 0;
     }
+
     .remove-btn {
       background-color: #dc3545;
       color: white;
@@ -31,6 +33,7 @@
       border-radius: 4px;
       cursor: pointer;
     }
+
     .checkout-btn {
       width: 100%;
       padding: 15px;
@@ -43,12 +46,14 @@
       cursor: pointer;
       margin-top: 20px;
     }
+
     .total {
       text-align: right;
       font-size: 20px;
       font-weight: bold;
       margin-top: 20px;
     }
+
     .empty {
       text-align: center;
       font-size: 18px;
@@ -94,7 +99,7 @@ const productMetadata = {
   9:{brand:"JBL", color:"Brown", old:7500, price:5000},
   10:{brand:"Canon", color:"Black", old:65000, price:55000},
   11:{brand:"Mi", color:"White", old:2000, price:1200},
-  12:{brand:"Seagate", color:"Black", old:65000, price:4800}
+  12:{brand:"Seagate", color:"Black", old:6500, price:4800}
 };
 
 function getEcommerceItem(item, index) {
@@ -194,8 +199,32 @@ function removeItem(index) {
   loadCart();
 }
 
-document.getElementById("checkoutBtn").addEventListener("click", function() {
-  window.location.href = "checkout.html";
+/* Updated Proceed to Checkout with GA4 Tracking */
+document.getElementById("checkoutBtn").addEventListener("click", function(e) {
+  e.preventDefault(); // Prevent immediate navigation
+  
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let total = 0;
+  const itemsArray = cart.map((item, index) => {
+    total += item.price;
+    return getEcommerceItem(item, index);
+  });
+
+  // Push begin_checkout event
+  window.dataLayer.push({ ecommerce: null });
+  window.dataLayer.push({
+    event: "begin_checkout",
+    ecommerce: {
+      currency: "INR",
+      value: total,
+      items: itemsArray
+    }
+  });
+
+  // Short delay to ensure the event is captured before leaving the page
+  setTimeout(() => {
+    window.location.href = "checkout.html";
+  }, 300);
 });
 
 loadCart();
